@@ -19,3 +19,5 @@ Instance_id=$(aws ec2 run-instances \
         --output text
         )
 done
+
+echo "instance id =$Instance_id"
