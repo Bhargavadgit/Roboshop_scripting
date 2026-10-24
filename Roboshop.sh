@@ -4,11 +4,11 @@ instance_type="t3.micro"
 domain="bhar92s.store"
 hostedzone=Z07751372GOQ7XKXVY478
 
-time(){
+timestamp(){
 
-    date+"%F_%T"
+    (date+"%F_%T")
 }
-echo "=============[info]Script Start time $time ==============="
+echo "=============[info]Script Start time $timestamp ==============="
 
 for instance in $@
 do
@@ -24,4 +24,4 @@ Instance_id=$(aws ec2 run-instances \
     )
 done
  echo "Instance id = ${Instance_id}"
-echo "=============[info]Script end time $time =================="
+echo "=============[info]Script end time $timestamp =================="
