@@ -4,12 +4,9 @@ instance_type="t3.micro"
 domain="bhar92s.store"
 hostedzone=Z07751372GOQ7XKXVY478
 
-timestamp(){
-   echo "time at :$(date +"%F_%T")"
-}
-echo "=============[info]Script Start time $timestamp ==============="
 
-for instance in $@
+
+for instance in "$@";
 do
 
 echo "Creating Instance :${instance}"
@@ -18,9 +15,7 @@ Instance_id=$(aws ec2 run-instances \
     --instance-type $instance_type \
     --security-groups "Roboshop-shell" "roboshop-$instance" \
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=Roboshop-$instance}]"\
-    --query 'instances[0].instances'\
+    --query "Instances[0].InstanceId" \
     --output text
     )
 done
- echo "Instance id = ${Instance_id}"
-echo "=============[info]Script end time $timestamp =================="
