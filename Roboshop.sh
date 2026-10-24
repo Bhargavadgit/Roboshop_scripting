@@ -11,10 +11,14 @@ for instance in $@
 do
 
 echo "Creating Instance :${instance}"
-
-
-
-
+Instance_id=$(aws ec2 run-instances \
+    --image-id ${ami_id} \
+    --instance-type ${instance_type} \
+    --security-groups "Roboshop-shell" "roboshop-${instance}" \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=Roboshop-${instance}}]"\
+    --query 'instances[0].instances'\
+    --output text
+    )
 done
-
+ echo "Instance id = ${Instance_id}"
 echo "=============[info]Script end time $date =================="
