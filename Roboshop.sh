@@ -1,6 +1,6 @@
 #!/bin/bash
 ami_id="ami-0055977a6e828a4f4"
-instance-type="t3.micro"
+instance_type="t3.micro"
 domain="bhar92s.store"
 hostedzone=Z07751372GOQ7XKXVY478
 
