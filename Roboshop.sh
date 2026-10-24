@@ -4,9 +4,9 @@ instance_type="t3.micro"
 domain="bhar92s.store"
 hostedzone="Z07751372GOQ7XKXVY478"
 
-Timestamp(){
 
-        (date+"%f_%T")
+timestamp(){
+    date "+%F %T" 
 }
 
 echo "==============[info] Script started ==========="
@@ -52,19 +52,6 @@ else
 fi           
 #--Create Domain for current Instance
 
-aws route53 change-resource-record-sets \
-    --hosted-zone-id ${hostedzone} \
-        --change-batch '
-        {"Changes":[
-                {"Action":"UPSERT"\
-                   "ResourceRecordSet":${r53_record}"\
-                   "Type":"A"\
-                   "TTL":1\
-                "ResourceRecords":[{"Value":"$ip"}]
-                                        }
-                }
-                   ]
-        }'
 
 
 echo "${instance} Created"
