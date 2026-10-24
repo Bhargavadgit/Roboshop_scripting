@@ -5,4 +5,4 @@ timestamp(){
 }
 
 echo "==============[info] Script started ==========="
-echo "${Timestamp}"
+echo "$Timestamp"
