@@ -29,14 +29,19 @@ if [ $instance != "frondend" ];then
          --instance-ids ${Instance_id} \
         --query "Reservations[*].Instances[*].PrivateIpAddress" \
         --output text)
+        r53_record=${Instance}.${domain}
         echo "Launched instance is not Froent end out is Private ip"
+        echo "${Instance}.${domain}"
         
 else
      ip=$(aws ec2 describe-instances \
          --instance-ids ${Instance_id} \
         --query "Reservations[*].Instances[*].publicIpAddress" \
         --output text)
-        echo "Launched instance is not Froent end out is public ip"
+        r53_record=${domain}
+         echo "Launched instance is  Froent end out is public ip"
+        echo "${domain}"
+        
 fi           
 
-echo " ip :$ip"
+
