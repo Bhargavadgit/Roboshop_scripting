@@ -4,8 +4,11 @@ instance_type="t3.micro"
 domain="bhar92s.store"
 hostedzone=Z07751372GOQ7XKXVY478
 
+time(){
 
-echo "=============[info]Script Start time $date ==============="
+    date+"%F_%T"
+}
+echo "=============[info]Script Start time $time ==============="
 
 for instance in $@
 do
@@ -21,4 +24,4 @@ Instance_id=$(aws ec2 run-instances \
     )
 done
  echo "Instance id = ${Instance_id}"
-echo "=============[info]Script end time $date =================="
+echo "=============[info]Script end time $time =================="
