@@ -8,12 +8,12 @@ hostedzone="Z07751372GOQ7XKXVY478"
 
 for instance in "$@";
 do
-
+#--- Creating instance id for to get Ip's
 echo "Creating Instance :${instance}"
 Instance_id=$(aws ec2 run-instances \
         --image-id $ami_id \
         --instance-type $instance_type \
-        --security-groups "Roboshop-shell" "R_mongo" \
+        --security-groups "Roboshop-common" "Roboshop-$instance" \
         --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=Roboshop-$instance}]"\
         --query "Instances[0].InstanceId" \
         --output text
@@ -21,3 +21,19 @@ Instance_id=$(aws ec2 run-instances \
 done
 
 echo "instance id =$Instance_id"
+
+#----Verifying Instance id to produce Ip's
+
+if [ $instance != "frondend" ];then
+        ip=$(aws ec2 describe-instances \
+         --instance-ids ${Instance_id} \
+        --query "Reservations[*].Instances[*].PrivateIpAddress" \
+        --output text)
+else
+     ip=$(aws ec2 describe-instances \
+         --instance-ids ${Instance_id} \
+        --query "Reservations[*].Instances[*].publicIpAddress" \
+        --output text)
+fi           
+
+echo " ip :$ip"
