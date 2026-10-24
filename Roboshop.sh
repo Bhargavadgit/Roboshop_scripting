@@ -5,8 +5,7 @@ domain="bhar92s.store"
 hostedzone=Z07751372GOQ7XKXVY478
 
 timestamp(){
-
-    (date+"%F_%T")
+   echo "time at :$(date +"%F_%T")"
 }
 echo "=============[info]Script Start time $timestamp ==============="
 
