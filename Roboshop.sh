@@ -1,25 +1,20 @@
 #!/bin/bash
+ami_id="ami-0055977a6e828a4f4"
+instance-type="t3.micro"
+domain="bhar92s.store"
+hostedzone=Z07751372GOQ7XKXVY478
 
-User_id=$(id -u) #--get userid
-logs_folder= "/var/log/Roboshop_Scripting"
-logs_file="${logs_folder}/${0}.log"
 
-if [ $user_id -ne 0 ]; then
-    echo "You are not root user, Please run the script with root user"
-    exit 1
-fi
+echo "=============[info]Script Start time $date ==============="
 
-mkdir -p $logs_Folder
+for instance in $@
+do
 
-date(){
-   $(date "+%F_%T")
-}
-
-echo "=============[info]Script Start time $date ===============
+echo "Creating Instance :${instance}"
 
 
 
 
+done
 
-
-echo "=============[info]Script end time $date ==================
+echo "=============[info]Script end time $date =================="
