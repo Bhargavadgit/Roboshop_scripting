@@ -36,7 +36,7 @@ if [ $instance != "frondend" ];then
          --instance-ids ${Instance_id} \
         --query "Reservations[*].Instances[*].PrivateIpAddress" \
         --output text)
-        r53_record="${Instance}.${domain}"
+        r53_record="$Instance.$domain"
         echo "Launched instance is not Froent end with Private ip"
         echo "${instance}.${domain}"
         
@@ -45,12 +45,14 @@ else
          --instance-ids ${Instance_id} \
         --query "Reservations[*].Instances[*].publicIpAddress" \
         --output text)
-        r53_record="${domain}"
+        r53_record="$domain"
          echo "Launched instance is  Froent end with  public ip"
         echo "${domain}"
         
 fi           
 #--Create Domain for current Instance
+echo "r53_record"
+echo "domain = ${domain}"
 aws route53 change-resource-record-sets \
     --hosted-zone-id $hostedzone \
     --change-batch '{"Changes":[{"Action":"UPSERT",
