@@ -5,6 +5,10 @@ domain_name="bhar92s.store"
 hosted_zone="Z07751372GOQ7XKXVY478"
 
 
+timestamp=(){
+        (date "+%F_%T")
+}
+
 
 echo "===============[info] Script Started ========="
 echo "Start time ::$(timestamp)"
@@ -44,7 +48,7 @@ fi
 aws route53 change-resource-record-sets 
 --hosted-zone-id "${hosted_zone}",
 --change-batch '{"Changes":[{"Action":"UPSERT",
-"ResourceRecordSet":{"Name":"'${r53_record}'",
+"ResourceRecordSet":{"Name":"'$r53_record'",
 "Type":"A","TTL":1,
 "ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
