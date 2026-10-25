@@ -1,8 +1,12 @@
 #!/bin/bash
 ami_id="ami-0055977a6e828a4f4"
 instance_type="t3.micro"
+domain_name="bhar92s.store"
 
 
+
+echo "===============[info] Script Started ========="
+echo "Start time ::$timestamp"
 # we are creating instance through loop it will give result instance id
 for instance in $@
 do 
@@ -22,12 +26,20 @@ if [ $Instance_id != "Frontend" ]; then
         --instance-ids i-0123456789abcdef0 \
         --query "Reservations[].Instances[].PrivateIpAddress" \
         --output text)
+        r53_record=${instance}.${domain_name}
         echo "Printed private :$IP"
 else    
         IP=$(aws ec2 describe-instances \
         --instance-ids i-0123456789abcdef0 \
         --query "Reservations[].Instances[].PublicIpAddress" \
         --output text)
+        r53_record=${domain_name}
         echo "Printed public :$IP"
 fi        
 
+
+
+
+echo "Start time ::$timestamp"
+echo "total time ::$SECONDS"
+echo "===============[info] Script end ========="

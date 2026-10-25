@@ -6,11 +6,11 @@ hostedzone="Z07751372GOQ7XKXVY478"
 
 
 timestamp(){
-    (date "+%F_%T") 
+    date "+%F_%T" 
 }
 
 echo "==============[info] Script started ==========="
-echo "${Timestamp}"
+echo "${timestamp}"
 
 
 for instance in "$@";
@@ -85,7 +85,7 @@ aws route53 change-resource-record-sets \
 
 
 echo "${instance} Created"
-echo "${Timestamp}"
+echo "${timestamp}"
 
 echo "==============[info] Script ended ==========="
 
