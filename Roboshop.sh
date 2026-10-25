@@ -1,7 +1,7 @@
 #!/bin/bash
 ami_id="ami-0055977a6e828a4f4"
 instance_type="t3.micro"
-domain="bhar92s.store"
+domain_name="bhar92s.store"
 hostedzone="Z07751372GOQ7XKXVY478"
 
 
@@ -31,28 +31,29 @@ echo "instance id =$Instance_id"
 
 #----Verifying Instance id to produce Ip's
 
-if [ $instance != "frondend" ];then
+if [ "$instance" != "frondend" ];then
         ip=$(aws ec2 describe-instances \
          --instance-ids ${Instance_id} \
-        --query "Reservations[*].Instances[*].PrivateIpAddress" \
+        --query "Reservations[].Instances[].PrivateIpAddress" \
         --output text)
-        r53_record="$Instance.$domain"
+        r53_record="${instance}.${domain_name}"
         echo "Launched instance is not Froent end with Private ip"
-        echo "${instance}.${domain}"
+        echo "${instance}.${domain_name}"
+        
         
 else
      ip=$(aws ec2 describe-instances \
          --instance-ids ${Instance_id} \
-        --query "Reservations[*].Instances[*].publicIpAddress" \
+        --query "Reservations[].Instances[].publicIpAddress" \
         --output text)
-        r53_record="$domain"
+        r53_record="${domain_name}"
          echo "Launched instance is  Froent end with  public ip"
-        echo "${domain}"
+        echo "${domain_name}"
         
 fi           
 #--Create Domain for current Instance
-echo "r53_record"
-echo "domain = ${domain}"
+echo "r53_record = ${r53_record}"
+echo "domain = ${domain_name}"
 aws route53 change-resource-record-sets \
     --hosted-zone-id $hostedzone \
     --change-batch '{"Changes":[{"Action":"UPSERT",
