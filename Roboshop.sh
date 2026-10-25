@@ -37,7 +37,7 @@ if [ $instance != "frondend" ];then
         --query "Reservations[*].Instances[*].PrivateIpAddress" \
         --output text)
         r53_record="${Instance}.${domain}"
-        echo "Launched instance is not Froent end Private ip"
+        echo "Launched instance is not Froent end with Private ip"
         echo "${instance}.${domain}"
         
 else
@@ -46,7 +46,7 @@ else
         --query "Reservations[*].Instances[*].publicIpAddress" \
         --output text)
         r53_record="${domain}"
-         echo "Launched instance is  Froent end  public ip"
+         echo "Launched instance is  Froent end with  public ip"
         echo "${domain}"
         
 fi           
