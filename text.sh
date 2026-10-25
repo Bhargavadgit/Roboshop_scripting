@@ -5,7 +5,7 @@ timestamp(){
 }
 
 echo "==============[info] Script started ==========="
-echo "time is:"${timestamp}
+
 echo "time is:"$(timestamp)
-echo "time is:${timestamp}"
-echo "time is:$(timestamp)"
+
+echo "time is::$(timestamp)"
