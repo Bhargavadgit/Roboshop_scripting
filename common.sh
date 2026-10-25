@@ -29,4 +29,5 @@ else
         --query "Reservations[].Instances[].PublicIpAddress" \
         --output text)
         echo "Printed public :$IP"
-        
+fi        
+
