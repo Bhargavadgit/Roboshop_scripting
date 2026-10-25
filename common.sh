@@ -6,7 +6,7 @@ domain_name="bhar92s.store"
 
 
 echo "===============[info] Script Started ========="
-echo "Start time ::$timestamp"
+echo "Start time ::"$timestamp""
 # we are creating instance through loop it will give result instance id
 for instance in $@
 do 
@@ -23,14 +23,14 @@ done
 #--by usingthese we can get Ip's
 if [ "$Instance_id" != "Frontend" ]; then
         IP=$(aws ec2 describe-instances \
-        --instance-ids i-0123456789abcdef0 \
+        --instance-ids "$Instance_id" \
         --query "Reservations[].Instances[].PrivateIpAddress" \
         --output text)
         r53_record=${instance}.${domain_name}
         echo "Printed private :$IP"
 else    
         IP=$(aws ec2 describe-instances \
-        --instance-ids i-0123456789abcdef0 \
+        --instance-ids "$Instance_id" \
         --query "Reservations[].Instances[].PublicIpAddress" \
         --output text)
         r53_record=${domain_name}
@@ -40,6 +40,6 @@ fi
 
 
 
-echo "Start time ::$timestamp"
+echo "Start time ::${timestamp}"
 echo "total time ::$SECONDS"
 echo "===============[info] Script end ========="
