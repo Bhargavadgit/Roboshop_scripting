@@ -21,7 +21,7 @@ Instance_id=$(
                  )
 done
 #--by usingthese we can get Ip's
-if [ $Instance_id != "Frontend" ]; then
+if [ "$Instance_id" != "Frontend" ]; then
         IP=$(aws ec2 describe-instances \
         --instance-ids i-0123456789abcdef0 \
         --query "Reservations[].Instances[].PrivateIpAddress" \
