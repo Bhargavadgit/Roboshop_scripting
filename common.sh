@@ -2,11 +2,12 @@
 ami_id="ami-0055977a6e828a4f4"
 instance_type="t3.micro"
 domain_name="bhar92s.store"
+hosted_zone="Z07751372GOQ7XKXVY478"
 
 
 
 echo "===============[info] Script Started ========="
-echo "Start time ::"$timestamp""
+echo "Start time ::$(timestamp)"
 # we are creating instance through loop it will give result instance id
 for instance in $@
 do 
@@ -28,6 +29,7 @@ if [ "$Instance_id" != "Frontend" ]; then
         --output text)
         r53_record=${instance}.${domain_name}
         echo "Printed private :$IP"
+        echo "R53 = $(r53_record)"
 else    
         IP=$(aws ec2 describe-instances \
         --instance-ids "$Instance_id" \
@@ -35,11 +37,18 @@ else
         --output text)
         r53_record=${domain_name}
         echo "Printed public :$IP"
+        echo "R53 = $(r53_record)"
 fi        
 
+#---updating r53 record
+aws route53 change-resource-record-sets 
+--hosted-zone-id "$hosted_zone" 
+--change-batch '{"Changes":[{"Action":"UPSERT",
+"ResourceRecordSet":{"Name":"'$r53_record'",
+"Type":"A","TTL":1,
+"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
 
-
-echo "Start time ::${timestamp}"
+echo "end time ::$(timestamp)"
 echo "total time ::$SECONDS"
 echo "===============[info] Script end ========="
