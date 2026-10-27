@@ -52,7 +52,6 @@ else
         
 fi           
 #create domain name
-echo "r_53=$(r53_record)",
 echo "r_53=$r53_record
 echo "r_53=${r53_record}"
 aws route53 change-resource-record-sets \
@@ -64,6 +63,3 @@ echo "${instance} Created"
 echo "${timestamp}"
 
 echo "==============[info] Script ended ==========="
-
-
-
