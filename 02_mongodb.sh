@@ -37,10 +37,17 @@ check_status $? "${G}Mongo Repo copied...${N}"
 dnf install mongodb-org -y  &>> log_file
 check_status $? "Installing Mongodb"
 
-systemctl enable mongod
+systemctl enable mongod  &>> log_file
 check_status $? "Enable  Mongodb"
-systemctl start mongod
+systemctl start mongod  &>> log_file
+check_status $? "starting Mongodb"
+
+sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
+
+systemctl restart mongod  &>> log_file
 check_status $? "restarting Mongodb"
+
+systemctl status mongod | tee -a log_file
 
 echo "Total time ::$SECONDS"
 echo "===============Script end $timestamp ============"
