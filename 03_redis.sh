@@ -48,10 +48,10 @@ check_status $? "Start Redis"
 systemctl restart redis  &>> log_file
 check_status $? "reStart Redis"
 
-redis-cli ping &>> log_file
-
-echo "==============Script end at ${Timestamp} ============"
+echo "total time :$SECONDS"
+echo "${timestamp}"
 echo "==============Script end at "$Timestamp" ============"
-echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
+echo "$(timestamp)" \ echo "[INFO] ==== Script completed Execution =====" | tee -a $logs_file
+
 
 
