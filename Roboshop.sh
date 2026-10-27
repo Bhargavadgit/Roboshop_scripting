@@ -52,7 +52,9 @@ else
         
 fi           
 #create domain name
-echo "r_53=$(r53_record)"
+echo "r_53=$(r53_record)",
+echo "r_53=$r53_record
+echo "r_53=${r53_record}"
 aws route53 change-resource-record-sets \
     --hosted-zone-id $hosted_zone \
     --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'

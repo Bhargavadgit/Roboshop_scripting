@@ -43,7 +43,7 @@ else
         echo "R53=$r53_record"
 fi        
 
-#---updating r53 record
+#---updating r53 record If 
 aws route53 change-resource-record-sets \
     --hosted-zone-id "$hosted_zone" \
     --change-batch '{
