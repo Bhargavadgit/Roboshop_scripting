@@ -9,7 +9,7 @@ logs_folder="/var/log/Roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 
 
-if [ $user_id -eq 0]; then
+if [ $user_id -eq 0 ]; then
     echo "Proceding......"
 else
     echo "Please run scripts with sudo user / conatct Admin"
