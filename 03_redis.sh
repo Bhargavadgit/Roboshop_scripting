@@ -1,4 +1,6 @@
 #!/bin/bash
+# varable should be in{flower bracess} example check logs_folders
+# function should be in closed bracess check timestamp
 user_id=$(id -u) #--getting userid
 logs_folder="/var/log/roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
@@ -29,7 +31,7 @@ check_status(){
         exit 1
     fi
 }
-echo "==============Script start "$Timestamp" ============"
+echo "==============Script start "$(Timestamp)" ============"
 
 dnf module disable redis -y &>> $log_file
 check_status $? "Diable Redis defalut"
@@ -50,7 +52,7 @@ systemctl restart redis  &>> $log_file
 check_status $? "reStart Redis"
 
 echo "total time :$SECONDS"
-echo "$(timestamp)"
+echo "$(timestamp)" # function should be in closed bracess
 echo "==============Script end at $(timestamp) ============"
 echo "$(timestamp) ==== [INFO]  Script completed Execution =====" | tee -a $logs_file
 
