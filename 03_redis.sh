@@ -1,7 +1,7 @@
 #!/bin/bash
 user_id=$(id -u) #--getting userid
 logs_folder="/var/log/roboshop_scripting"
-$log_file="${logs_folder}/${0}.log"
+log_file="${logs_folder}/${0}.log"
 #-- add clours to messages
 R="\e[31m" # Red
 G="\e[32m" # Green
