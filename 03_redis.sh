@@ -30,14 +30,28 @@ check_status(){
 }
 echo "==============Script start "$Timestamp" ============"
 
-dnf module disable redis -y
+dnf module disable redis -y &>> log_file
 check_status $? "Diable Redis defalut"
-dnf module enable redis:7 -y
+dnf module enable redis:7 -y  &>> log_file
 check_status $? "enable Redis 7"
-dnf install redis -y
+dnf install redis -y  &>> log_file
 check_status $? "Installing Redis 7"
 
-echo "==============Script end at ${Timestamp} ============"
+# sed -i -e 's/^bind 127.0.0.1/bind 0.0.0.0/' -e 's/^protected-mode yes/protected-mode no/' /etc/redis/redis.conf
+sed -i -e 's/^bind 127.0.0.1/bind 0.0.0.0/' -e 's/^protected-mode yes/protected-mode no/' /etc/redis/redis.conf
+
+systemctl enable redis  &>> log_file
+check_status $? "enable Redis"
+systemctl start redis  &>> log_file
+check_status $? "Start Redis"
+
+systemctl restart redis  &>> log_file
+check_status $? "reStart Redis"
+
+redis-cli ping &>> log_file
+
+echo "==============Script end at $(Timestamp) ============"
 echo "==============Script end at "$Timestamp" ============"
+echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
 
 
