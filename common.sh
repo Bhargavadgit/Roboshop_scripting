@@ -5,8 +5,10 @@ domain_name="bhar92s.store"
 hosted_zone="Z07751372GOQ7XKXVY478"
 
 
-timestamp=(){(date "+%F_%T")}
-
+timestamp(){
+    (date "+%F %T")
+}
+     
 echo "===============[info] Script Started ========="
 echo "Start time ::$(timestamp)"
 # we are creating instance through loop it will give result instance id
