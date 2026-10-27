@@ -25,7 +25,7 @@ validate(){
         exit 1
     fi
 }
-===============Script start $timestamp ============"
+echo "==============Script start $timestamp ============"
 
-===============Script end $timestamp ============"
+echo "===============Script end $timestamp ============"
 # cp mongo.repo
