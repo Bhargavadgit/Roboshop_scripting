@@ -22,7 +22,7 @@ Timestamp(){
     (date +"%F %t")
 }
 
-validate(){
+check_status(){
     if [ $1 -eq 0 ]; then  
         echo "$2 success"
     else
@@ -32,15 +32,15 @@ validate(){
 }
 echo "==============Script start $timestamp ============"
 cp mongo.repo /etc/yum.repos.d/mongo.repo
-validate $? "${G}Mongo Repo copied...${N}"
+check_status $? "${G}Mongo Repo copied...${N}"
 
 dnf install mongodb-org -y  &>> log_file
-validate $? "Installing Mongodb"
+check_status $? "Installing Mongodb"
 
 systemctl enable mongod
-Validate $? "Enable  Mongodb"
+check_status $? "Enable  Mongodb"
 systemctl start mongod
-Validate $? " restarting Mongodb"
+check_status $? "restarting Mongodb"
 
 echo "Total time ::$SECONDS"
 echo "===============Script end $timestamp ============"
