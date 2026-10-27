@@ -32,7 +32,7 @@ if [ "$Instance_id" != "Frontend" ]; then
         --output text)
         r53_record=${instance}.${domain_name}
         echo "Printed private :$IP"
-        echo "R53 = $(r53_record)"
+        echo "R53=$(r53_record)"
 else    
         IP=$(aws ec2 describe-instances \
         --instance-ids "$Instance_id" \
@@ -44,12 +44,12 @@ else
 fi        
 
 #---updating r53 record
-aws route53 change-resource-record-sets \
---hosted-zone-id "${hosted_zone}",
---change-batch '{"Changes":[{"Action":"UPSERT",
-"ResourceRecordSet":{"Name":"'$r53_record'",
-"Type":"A","TTL":1,
-"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
+# aws route53 change-resource-record-sets \
+# --hosted-zone-id "${hosted_zone}",
+# --change-batch '{"Changes":[{"Action":"UPSERT",
+# "ResourceRecordSet":{"Name":"'$r53_record'",
+# "Type":"A","TTL":1,
+# "ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
 
 echo "end time ::$(timestamp)"
