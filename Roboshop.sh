@@ -2,7 +2,7 @@
 ami_id="ami-0055977a6e828a4f4"
 instance_type="t3.micro"
 domain_name="bhar92s.store"
-hostedzone="Z07751372GOQ7XKXVY478"
+hosted_zone="Z07751372GOQ7XKXVY478"
 
 
 timestamp(){
@@ -53,7 +53,7 @@ else
 fi           
 #create domain name
 aws route53 change-resource-record-sets \
-    --hosted-zone-id $domain_name \
+    --hosted-zone-id $hosted_zone \
     --change-batch '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
 
