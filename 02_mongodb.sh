@@ -38,10 +38,11 @@ dnf install mongodb-org -y  &>> log_file
 validate $? "Installing Mongodb"
 
 systemctl enable mongod
+Validate $? "Enable  Mongodb"
 systemctl start mongod
-Validate $? "Enable & restarting Mongodb"
+Validate $? " restarting Mongodb"
 
-echo "Total time ::$seconds"
+echo "Total time ::$SECONDS"
 echo "===============Script end $timestamp ============"
 
 
