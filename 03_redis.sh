@@ -17,7 +17,7 @@ if [ $user_id -ne 0 ]; then
 fi
 
 Timestamp(){
-    (date +"%F %t")
+    (date "+%F %t")
 }
 
 check_status(){
@@ -50,7 +50,7 @@ check_status $? "reStart Redis"
 
 redis-cli ping &>> log_file
 
-echo "==============Script end at $(Timestamp) ============"
+echo "==============Script end at ${Timestamp} ============"
 echo "==============Script end at "$Timestamp" ============"
 echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
 
