@@ -16,9 +16,9 @@ if [ $user_id -ne 0 ]; then
     exit 1
 fi
 
-Timestamp(){
-    # (date "+%F %T")
-     date "+%F %T"
+timestamp(){
+    (date "+%F %T")
+    #  date "+%F %T"
 }
 
 check_status(){
@@ -50,9 +50,9 @@ systemctl restart redis  &>> $log_file
 check_status $? "reStart Redis"
 
 echo "total time :$SECONDS"
-echo "$(Timestamp)"
-echo "==============Script end at "$Timestamp" ============"
-echo "$(Timestamp)" \ echo "[INFO] ==== Script completed Execution =====" | tee -a $logs_file
+echo "$(timestamp)"
+echo "==============Script end at $(timestamp) ============"
+echo "$(timestamp) ==== [INFO]  Script completed Execution =====" | tee -a $logs_file
 
 
 
