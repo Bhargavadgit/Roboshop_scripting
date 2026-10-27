@@ -40,7 +40,7 @@ else
         --output text)
         r53_record=${domain_name}
         echo "Printed public :$IP"
-        echo "R53 = $(r53_record)"
+        echo "R53=${r53_record}"
 fi        
 
 #---updating r53 record
