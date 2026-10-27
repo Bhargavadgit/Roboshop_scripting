@@ -32,7 +32,7 @@ if [ "$Instance_id" != "Frontend" ]; then
         --output text)
         r53_record=${instance}.${domain_name}
         echo "Printed private :$IP"
-        echo "R53=$(r53_record)"
+        echo "R53=$r53_record"
 else    
         IP=$(aws ec2 describe-instances \
         --instance-ids "$Instance_id" \
