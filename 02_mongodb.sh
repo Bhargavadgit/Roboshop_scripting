@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-user_id =(id -u) #--getting userid
+user_id =$(id -u) #--getting userid
 
 
 
