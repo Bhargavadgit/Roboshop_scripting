@@ -51,37 +51,10 @@ else
         echo "${domain_name}"
         
 fi           
-#--Create Domain for current Instance
-# echo "r53_record = ${r53_record}"
-# echo "domain = ${domain_name}"
-# aws route53 change-resource-record-sets \
-#     --hosted-zone-id $hostedzone \
-#     --change-batch "{"Changes":[{"Action":"UPSERT",
-#     "ResourceRecordSet": {"Name":"$r53_record",
-#     "Type":"A","TTL":1,
-#     "ResourceRecords":[{"Value":"$ip"}]}}]}"
-
-# # Create a dynamic domain name from the instance name
-# record_name="${instance}.${domain_name}"
-
-echo "Creating Route 53 record: ${record_name}"
-
-# Create Route 53 A record
+#create domain name
 aws route53 change-resource-record-sets \
-    --hosted-zone-id "${hostedzone}" \
-    --change-batch "{
-        \"Changes\": [{
-            \"Action\": \"UPSERT\",
-            \"ResourceRecordSet\": {
-                \"Name\": \"'${record_name}'\",
-                \"Type\": \"A\",
-                \"TTL\": 1,
-                \"ResourceRecords\": [{
-                    \"Value\": \"'${ip}'\"
-                }]
-            }
-        }]
-    }"    
+    --hosted-zone-id $domain_name \
+    --change-batch '{"Changes":[{"Action":"CREATE","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
 
 echo "${instance} Created"
