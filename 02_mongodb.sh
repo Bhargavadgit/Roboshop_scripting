@@ -2,7 +2,7 @@
 
 
 user_id=$(id -u) #--getting userid
-logs_folder="/var/logs/roboshop_scripting"
+logs_folder="/var/log/roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 
 mkdir -p $logs_folder
