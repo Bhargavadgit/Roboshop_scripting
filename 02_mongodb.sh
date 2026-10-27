@@ -15,3 +15,13 @@ mkdir -p $logs_folder
 Timestamp(){
     (date +"%F %t")
 }
+
+# validate(){
+#     if [ $1 -eq 0 ]; then  
+#         echo "$2 installation is success"
+#     else
+#        echo "$2 installation failed, Please check the issue with the server"
+#         exit 1
+#     fi
+# }
+# cp mongo.repo
