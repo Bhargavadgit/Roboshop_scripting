@@ -6,7 +6,8 @@ logs_folder="/var/log/roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 
 mkdir -p $logs_folder
-validate $? "Directoey Created"
+
+
 if [ $user_id -ne 0 ]; then
     echo "Please run scripts with sudo user / conatct Admin"
     exit 1
@@ -24,4 +25,7 @@ validate(){
         exit 1
     fi
 }
+===============Script start $timestamp ============"
+
+===============Script end $timestamp ============"
 # cp mongo.repo
