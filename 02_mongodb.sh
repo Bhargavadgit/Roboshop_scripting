@@ -6,7 +6,7 @@ logs_folder="/var/log/roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 #-- add clours to messages
 R="\e[31m" # Red
-G="\e[32m" # Green
+G='\e[32m' # Green
 Y="\e[33m" # Yellow
 N="\e[0m"  # No Color
 
@@ -32,7 +32,7 @@ check_status(){
 }
 echo "==============Script start $timestamp ============"
 cp mongo.repo /etc/yum.repos.d/mongo.repo
-check_status $? "${G}Mongo Repo copied...${N}"
+check_status $? "${G}..Mongo Repo copied...${N}"
 
 dnf install mongodb-org -y  &>> log_file
 check_status $? "Installing Mongodb"
