@@ -52,14 +52,13 @@ else
         echo "${domain_name}"
         
 fi           
-#     #create domain name
-# echo "given r53=$r53_record"
-# aws route53 change-resource-record-sets \
-#     --hosted-zone-id $hosted_zone \
-#     --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
+    #create domain name
+echo "given r53=${r53_record}"
+aws route53 change-resource-record-sets \
+    --hosted-zone-id $hosted_zone \
+    --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
-
-# echo "${instance} Created"
-# echo "$(timestamp)"
+echo "${instance} Created"
+echo "$(timestamp)"
 
 echo "==============[info] Script ended at $(timestamp)==========="
