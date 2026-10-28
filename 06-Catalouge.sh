@@ -5,7 +5,7 @@
 # function should be in closed bracess check timestamp
 # to check user already exist or not use id
 user_id=$(id -u) #get user id
-logs_folder="/var/log/Roboshop_scripting"
+logs_folder="/var/log/  "
 log_file="${logs_folder}/${0}.log"
 script_dir=$(dirname "$(realpath"$0")")
 domain_name="bhar92s.store"
@@ -46,7 +46,7 @@ check_status $? "installed nodejs24"
 
 # adding user befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
-if [ $1 -ne 0 ]; then
+if [ $? -ne 0 ]; then
     echo -e "$2 ${G}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
     check_status $? -e "${G}user added...as rpboshop${N}"
@@ -76,7 +76,7 @@ check_status $? "installing libreries"
 #step-2 copy path & do command dirname <step1 result>
 #we use $(dirname$"(realpath"$0")") ---gives path to directory
 
-sed -i "s/DOMAIN_NAME/$domain_name" "$script_dir/catalogue.service"
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/catalogue.service"
 cp "$script_dir/catalogue.service" /etc/systemd/system/catalogue.service
 check_status $? "copied catalogue.service"
 
