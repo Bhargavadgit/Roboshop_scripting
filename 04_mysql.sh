@@ -29,10 +29,10 @@ timestamp(){
 
 check_status(){
 if [ $1 -ne 0 ]; then
-    echo "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
+    echo -e "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
     exit 1
 else
-    echo "$2 ${G}success${N} at $(timestamp)" | tee -a log_file  
+    echo -e "$2 ${G}success${N} at $(timestamp)" | tee -a log_file  
 fi
 }
 
