@@ -26,7 +26,7 @@ do
         --output text)
 done
 
-    echo "instance-id =${Instance_id}"
+    echo "instance-id=${Instance_id}"
 
 #----Verifying Instance id to produce Ip's
 
