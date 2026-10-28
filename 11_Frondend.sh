@@ -7,7 +7,7 @@
 user_id=$(id -u) #get user id
 logs_folder="/var/log/Roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
-script_dir=$(dirname "$(realpath"$0")")
+script_dir=$(dirname "$(realpath "$0")")
 domain_name="bhar92s.store"
 R="\e[31m" #red
 G="\e[32m" #Green
