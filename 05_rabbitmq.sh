@@ -27,24 +27,24 @@ timestamp(){
 
 check_status(){
 if [ $1 -ne 0 ]; then
-    echo "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
+    echo -e "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
     exit 1
 else
-    echo "$2 ${G}success${N}at $(timestamp)"  | tee -a log_file  
+    echo -e "$2 ${G}success${N}at $(timestamp)"  | tee -a log_file  
 fi
 }
 
 echo "================Script started $(timestamp)================="
 
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>> $log_file
-check_status $? "${G}Coping rabbitmq.repo......${N}"
+check_status $? "Coping rabbitmq.repo......"
 
 dnf install erlang rabbitmq-server -y   &>> $log_file
-check_status $? "${G}installed rabbitmq......${N}"
+check_status $? "installed rabbitmq......"
 
 systemctl enable rabbitmq-server  &>> $log_file
 systemctl start rabbitmq-server   &>> $log_file
-check_status $? "${G}enabled & started rabbitmq......${N}"
+check_status $? "enabled & started rabbitmq......"
 
 #adding user
 rabbitmqctl list_users | grep -qw "roboshop"
@@ -52,7 +52,7 @@ if [ $? -ne 0 ]; then
     rabbitmqctl add_user roboshop roboshop123 &>> $log_file
     check_status $? "adding user for roboshop"
 else   
-    echo "user alredy exist..${Y}skipping..${N}"
+    echo -e "user alredy exist..${Y}skipping..${N}"
 fi    
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $log_file
 check_status $? "setting permissions for user in roboshop"
