@@ -15,7 +15,7 @@ Y="\e[33m" #yellow
 N="\e[0m"  #normal
 
 if [ $user_id -ne 0 ];then
- echo "not root user "
+ echo -e "${R}not root user${N} "
  exit 1
  else 
  echo "Processing..."
