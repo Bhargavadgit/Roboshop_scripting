@@ -32,7 +32,7 @@ check_status(){
 }
 echo "==============Script start $timestamp ============"
 cp mongo.repo /etc/yum.repos.d/mongo.repo
-check_status $? "${G}..Mongo Repo copied...${N}"
+check_status $? -e "${G}..Mongo Repo copied...${N}"
 
 dnf install mongodb-org -y  &>> log_file
 check_status $? "Installing Mongodb"
