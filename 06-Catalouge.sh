@@ -17,7 +17,7 @@ N="\e[0m"  #normal
 mkdir -p $logs_folder
 
 if [ $user_id -ne 0 ]; then
-    echo -e "${R}..please run script with sudo user / contact admin${N}"
+    echo  "please run script with sudo user / contact admin"
     exit 1
 fi
 
@@ -47,7 +47,7 @@ check_status $? "installed nodejs24"
 # adding user befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
 if [ $1 -ne 0 ]; then
-    echo "$2 ${G}no user exist creating user${N}"
+    echo -e "$2 ${G}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
     check_status $? -e "${G}user added...as rpboshop${N}"
     else 
