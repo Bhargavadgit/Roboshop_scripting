@@ -103,7 +103,7 @@ if [ $product_count -ne 0 ]; then
     mongosh --host mongodb.$domain_name </app/db/master-data.js
     check_status $? "products loaded"
 fi
-systemctl restart mongodb
+systemctl restart catalogue
 check_status $? "restarting..."
 
 echo "Total time ::$SECONDS"
