@@ -50,14 +50,14 @@ check_status $? "installed nodejs"
 # adding user befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
 if [ $? -ne 0 ]; then
-    echo "${G}no user exist creating user${N}"
+    echo -e "${G}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
     check_status $? -e "${G}user added...as roboshop${N}"
     else 
     echo -e "${Y} system user exist ..Skipping${N}"    
 fi
 rm -rf /app #deleteing existing App data
-check_status $? -e "${R}removeing old files of roboshop${N}"
+check_status $?  "removeing old files of roboshop"
 
 mkdir /app # creating app directory
 
@@ -80,7 +80,7 @@ check_status $? "Install Dependencies..."
 # get script dir ---$(dirname"$(realpath"$0")")
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.services"
-cp "$script_dir/user.services" /etc/systemd/system/user.service
+cp "$script_dir/user.services" /etc/systemd/system/user.services
 check_status $? "copied user.service file..." | tee -a log_file
 
 systemctl daemon-reload
