@@ -73,7 +73,9 @@ check_status $? "Creating virtual environment"
 check_status $? "Installing dependencies"  
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/payment.service"
-cp "$scripts_dir/payment.service" /etc/systemd/system/payment.service
+
+cp "$script_dir/payment.service" /etc/systemd/system/payment.service
+
 
 systemctl daemon-reload &>> $log_file
 check_status $? "daemon-reload payment"
