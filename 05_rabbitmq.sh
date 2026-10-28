@@ -37,25 +37,25 @@ fi
 echo "================Script started $(timestamp)================="
 
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>> $log_file
-validate $? "${G}Coping rabbitmq.repo......${N}"
+check_status $? "${G}Coping rabbitmq.repo......${N}"
 
 dnf install erlang rabbitmq-server -y   &>> $log_file
-validate $? "${G}installed rabbitmq......${N}"
+check_status $? "${G}installed rabbitmq......${N}"
 
 systemctl enable rabbitmq-server  &>> $log_file
 systemctl start rabbitmq-server   &>> $log_file
-validate $? "${G}enabled & started rabbitmq......${N}"
+check_status $? "${G}enabled & started rabbitmq......${N}"
 
 #adding user
 rabbitmqctl list_users | grep -qw "roboshop"
 if [ $? -ne 0 ]; then
     rabbitmqctl add_user roboshop roboshop123 &>> $log_file
-    validate $? "adding user for roboshop"
+    check_status $? "adding user for roboshop"
 else   
     echo "user alredy exist..${Y}skipping..${N}"
 fi    
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $log_file
-validate $? "setting permissions for user in roboshop"
+check_status $? "setting permissions for user in roboshop"
 
 echo "================Script ended $(timestamp)================="| tee -a $logs_file
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
