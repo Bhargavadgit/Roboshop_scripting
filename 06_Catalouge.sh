@@ -5,7 +5,7 @@
 # function should be in closed bracess check timestamp
 # to check user already exist or not use id
 user_id=$(id -u) #get user id
-logs_folder="/var/log/  "
+logs_folder="/var/log/Roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 script_dir=$(dirname "$(realpath "$0")")
 domain_name="bhar92s.store"
