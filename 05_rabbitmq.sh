@@ -36,14 +36,14 @@ fi
 
 echo "================Script started $(timestamp)================="
 
-cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>> $log_file
 validate $? "${G}Coping rabbitmq.repo......${N}"
 
-dnf install erlang rabbitmq-server -y
+dnf install erlang rabbitmq-server -y   &>> $log_file
 validate $? "${G}installed rabbitmq......${N}"
 
-systemctl enable rabbitmq-server
-systemctl start rabbitmq-server
+systemctl enable rabbitmq-server  &>> $log_file
+systemctl start rabbitmq-server   &>> $log_file
 validate $? "${G}enabled & started rabbitmq......${N}"
 
 #adding user

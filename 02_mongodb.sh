@@ -30,9 +30,9 @@ check_status(){
         exit 1
     fi
 }
-echo "==============Script start $timestamp ============"
+echo "==============Script start $(timestamp) ============"
 cp mongo.repo /etc/yum.repos.d/mongo.repo
-check_status $? -e "${G}..Mongo Repo copied...${N}"
+check_status -e $?  "${G}..Mongo Repo copied...${N}"
 
 dnf install mongodb-org -y  &>> log_file
 check_status $? "Installing Mongodb"
@@ -50,6 +50,6 @@ check_status $? "restarting Mongodb"
 systemctl status mongod | tee -a log_file
 
 echo "Total time ::$SECONDS"
-echo "===============Script end $timestamp ============"
+echo "===============Script end $(timestamp) ============"
 
 

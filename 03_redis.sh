@@ -31,7 +31,7 @@ check_status(){
         exit 1
     fi
 }
-echo "==============Script start $(Timestamp) ============"
+echo "==============Script start $(timestamp)============"
 
 dnf module disable redis -y &>> $log_file
 check_status $? "Diable Redis defalut"
