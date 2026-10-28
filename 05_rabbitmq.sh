@@ -7,7 +7,10 @@
 user_id=$(id -u) #getting user id
 logs_folder="/var/log/Roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
-
+R="\e[31m" # Red
+G="\e[32m" # Green
+Y="\e[33m" # Yellow
+N="\e[0m"  # No Color
 
 if [ $user_id -eq 0 ]; then
     echo "Proceding......"

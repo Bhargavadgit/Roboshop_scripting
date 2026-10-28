@@ -9,8 +9,8 @@ timestamp(){
     date "+%F_%T" 
 }
 
-echo "==============[info] Script started ==========="
-echo "${timestamp}"
+echo "==============[info] Script started at $(timestamp) ==========="
+echo "$(timestamp)"
 
 
 for instance in "$@";
@@ -29,40 +29,38 @@ done
 
 echo "instance id =$Instance_id"
 
-#----Verifying Instance id to produce Ip's
+# #----Verifying Instance id to produce Ip's
 
-if [ "$instance" != "frondend" ];then
-        ip=$(aws ec2 describe-instances \
-         --instance-ids ${Instance_id} \
-        --query "Reservations[].Instances[].PrivateIpAddress" \
-        --output text)
-        r53_record="${instance}.${domain_name}"
-        echo "Launched instance is not Froent end with Private ip"
-        echo "${instance}.${domain_name}"
+# if [ "$instance" != "frondend" ];then
+#         ip=$(aws ec2 describe-instances \
+#          --instance-ids ${Instance_id} \
+#         --query "Reservations[].Instances[].PrivateIpAddress" \
+#         --output text
+#         )
+#         r53_record="${instance}.${domain_name}"
+#         echo "Launched instance is not Froent end with Private ip"
+#         echo "${instance}.${domain_name}"
         
         
-else
-     ip=$(aws ec2 describe-instances \
-         --instance-ids ${Instance_id} \
-        --query "Reservations[].Instances[].publicIpAddress" \
-        --output text)
-        r53_record="${domain_name}"
-         echo "Launched instance is  Froent end with  public ip"
-        echo "${domain_name}"
+# else
+#      ip=$(aws ec2 describe-instances \
+#          --instance-ids ${Instance_id} \
+#         --query "Reservations[].Instances[].publicIpAddress" \
+#         --output text
+#         )
+#         r53_record="${domain_name}"
+#          echo "Launched instance is  Froent end with  public ip"
+#         echo "${domain_name}"
         
-fi           
-#create domain name
-echo "given r53=$r53_record"
-aws route53 change-resource-record-sets \
-    --hosted-zone-id $hosted_zone \
-    --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
+# fi           
+#     #create domain name
+# echo "given r53=$r53_record"
+# aws route53 change-resource-record-sets \
+#     --hosted-zone-id $hosted_zone \
+#     --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$r53_record'","Type":"A","TTL":1,"ResourceRecords":[{"Value":"'$ip'"}]}}]}'
 
 
-echo "${instance} Created"
-echo "${timestamp}"
+# echo "${instance} Created"
+# echo "$(timestamp)"
 
-echo "==============[info] Script ended ==========="
-
-
-
-echo "================end================"
+echo "==============[info] Script ended at $(timestamp)==========="

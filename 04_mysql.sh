@@ -7,6 +7,11 @@
 user_id=$(id -u) #getting user id
 logs_folder="/var/log/Roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
+R="\e[31m" # Red
+G="\e[32m" # Green
+Y="\e[33m" # Yellow
+N="\e[0m"  # No Color
+
 
 
 if [ $user_id -eq 0 ]; then
@@ -27,7 +32,7 @@ if [ $1 -ne 0 ]; then
     echo "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
     exit 1
 else
-    echo "$2 ${G}success${N}at $(timestamp)"  | tee -a log_file  
+    echo "$2 ${G}success${N} at $(timestamp)" | tee -a log_file  
 fi
 }
 
