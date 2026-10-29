@@ -5,10 +5,10 @@ user_id=$(id -u) #--getting userid
 logs_folder="/var/log/roboshop_scripting"
 log_file="${logs_folder}/${0}.log"
 #-- add clours to messages
-R='\e[31m' # Red
-G='\e[32m' # Green
-Y='\e[33m' # Yellow
-N='\e[0m' # No Color
+R="\e[31m" # Red
+G="\e[32m" # Green
+Y="\e[33m" # Yellow
+N="\e[0m" # No Color
 
 mkdir -p $logs_folder
 
@@ -25,9 +25,9 @@ timestamp(){
 
 check_status(){
     if [ $1 -eq 0 ]; then  
-        echo "$2 success"
+        echo -e "${G}...[info].. success....${N}....$(timestamp)"  | tee -a $log_file
     else
-       echo "$2 failed"
+       echo -e "${R}..[error]...$2 Failed....${N}....$(timestamp)"  | tee -a $log_file
         exit 1
     fi
 }
@@ -50,6 +50,9 @@ check_status $? "Start Redis"
 
 systemctl restart redis  &>> $log_file
 check_status $? "reStart Redis"
+
+systemctl status redis  &>> $log_file
+check_status $? "reStart status is active"
 
 echo "total time :$SECONDS"
 echo "$(timestamp)" # function should be in closed bracess
