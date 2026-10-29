@@ -42,7 +42,8 @@ echo "===================Script Started at $(timestamp)==================" | tee
 dnf module enable maven:3.9 -y  &>> $log_file
 check_status $? "enable Maven..."
 
-dnf install maven java-25-openjdk-devel -y  &>> $log_file
+dnf install maven java-21-openjdk-devel -y  &>> $log_file
+# dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? "Install Maven..."
 
 alternatives --set java "java-21-openjdk.x86_64 (/usr/lib/jvm/java-21-openjdk-21.0.12.1.1-1.2.el9.x86_64/bin/java)"  &>> $log_file
