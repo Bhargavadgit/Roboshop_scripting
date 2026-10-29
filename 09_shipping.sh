@@ -41,7 +41,7 @@ dnf module enable maven:3.9 -y  &>> $log_file
 check_status $? "enable maven" 
 
 dnf install maven java-25-openjdk-devel -y  &>> $log_file
-check_status $? " maven java 21" 
+check_status $? " maven java 25" 
 
 alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java" &>> $log_file
 #alternatives --set java "/usr/lib/jvm/java-21-openjdk/bin/java"  &>> $log_file
