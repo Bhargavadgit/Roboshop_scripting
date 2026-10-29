@@ -44,6 +44,7 @@ dnf install nginx -y   &>> $log_file
 check_status $? "enable & install Nginx"
 
 systemctl enable nginx  &>> $log_file
+check_status $? "enable & start Nginx"
 systemctl start nginx  &>> $log_file
 check_status $? "enable & start Nginx"
 
