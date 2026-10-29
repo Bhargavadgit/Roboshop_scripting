@@ -29,10 +29,10 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "${R} $2.. Failed...${N} at $(timestamp)"| tee -a log_file
+     echo -e "...[error]....${R} $2.. Failed...${N}...at $(timestamp)"
      exit 1
     else
-     echo -e "${G} $2.. success...${N} at $(timestamp)"| tee -a log_file
+     echo -e "..[info]...${G} $2.. success...${N}... at $(timestamp)"
     fi
 }
 
@@ -52,26 +52,24 @@ id roboshop &>> $log_file
 if [ $? -ne 0 ]; then
     echo -e "${G}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
-    check_status $? -e "${G}user added...as roboshop${N}"
+    check_status $? -e "user added...as roboshop"
     else 
     echo -e "${Y} system user exist ..Skipping${N}"    
 fi
-rm -rf /app #deleteing existing App data
+rm -rf /app &>> $log_file #deleteing existing App data
 check_status $?  "removeing old files of roboshop"
 
-mkdir /app # creating app directory
-
+mkdir /app &>> $log_file # creating app directory
 check_status $? "Creating app directory"
 
 curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
 check_status $? "Downloading user"
 
-cd /app
-
+cd /app  &>> $log_file
 unzip /tmp/user.zip  &>> $log_file
 check_status $? "unzip modules..."
 
-npm install
+npm install  &>> $log_file
 check_status $? "Install Dependencies..."
 
 # coping data from user.service
@@ -83,16 +81,16 @@ sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service"
 cp "$script_dir/user.service" /etc/systemd/system/user.service
 check_status $? "copied user.service file..." | tee -a log_file
 
-systemctl daemon-reload
+systemctl daemon-reload  &>> $log_file
 check_status $? "daemon-reload user..."
 
-systemctl enable user
+systemctl enable user  &>> $log_file
 check_status $? "enable user..."
 
-systemctl start user
+systemctl start user  &>> $log_file
 check_status $? "start user..."
 
-systemctl restart user
+systemctl restart user  &>> $log_file
 check_status $? "restart user..."
 
 echo "Total time ::$SECONDS"
