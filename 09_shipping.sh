@@ -79,14 +79,26 @@ cd /app  &>> $log_file
 unzip /tmp/shipping.zip  &>> $log_file
 check_status $? "unzip shipping"  
 
-cd /app   &>> $log_file
-mvn clean package   &>> $log_file
-check_status $? "Installing dependencies"  
-mv target/shipping.jar shipping.jar  &>> $log_file
-check_status $? "moving shipping file"  
+# cd /app   &>> $log_file
+# mvn clean package   &>> $log_file
+# check_status $? "Installing dependencies"
 
-dnf install mysql -y  &>> $log_file
-check_status $? "Install the MySQL client"  
+# mv target/shipping.jar shipping.jar  &>> $log_file
+# check_status $? "moving shipping file"  
+
+# dnf install mysql -y  &>> $log_file
+# check_status $? "Install the MySQL client"  
+cd /app &>> "$log_file"
+check_status $? "Changing directory to /app"
+
+mvn clean package &>> "$log_file"
+check_status $? "Building shipping application"
+
+mv target/shipping.jar shipping.jar &>> "$log_file"
+check_status $? "Moving shipping file"
+
+dnf install mysql -y &>> "$log_file"
+check_status $? "Installing MySQL client"
 
 # before loading the cities check if already exist or not, why because first time there is no cities it will load then
 #through an error for loading cts
