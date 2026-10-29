@@ -173,6 +173,7 @@ check_status $? "Setting Java 25 as default Java version"
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
 source /etc/profile.d/java.sh
 echo $JAVA_HOME
+
 validate $? "Setting JAVA_HOME for maven"
 
 id roboshop &>> $log_file
@@ -193,13 +194,22 @@ curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop
 validate $? "Downloading shipping"
 
 cd /app
-unzip /tmp/shipping.zip &>> $log_file
+validate $? "Changing directory to /app"
+
+unzip /tmp/shipping.zip -d /app &>> "$log_file"
 validate $? "Unzipping shipping"
 
-mvn clean package &>> $log_file
-validate $? "Installing dependencies"
+if [ ! -f /app/pom.xml ]; then
+    echo "pom.xml not found in /app" &>> "$log_file"
+    find /app -name pom.xml &>> "$log_file"
+    exit 1
+fi
 
-mv target/shipping.jar shipping.jar
+cd /app
+mvn clean package &>> "$log_file"
+validate $? "Building shipping application"
+
+mv /app/target/shipping.jar /app/shipping.jar
 validate $? "Moving shipping.jar file"
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
