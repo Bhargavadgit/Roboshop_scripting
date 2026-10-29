@@ -29,57 +29,57 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "${R} $2.. Failed...${N} at $(timestamp)"| tee -a log_file
+     echo -e "...[error]...${R} $2.. Failed...${N}.... at $(timestamp)"
      exit 1
     else
-     echo -e "${G} $2.. success...${N} at $(timestamp)"| tee -a log_file
+     echo -e "...[info]...${G} $2.. success...${N}.....at $(timestamp)"|
     fi
 }
 
 echo "===================Script Started at $(timestamp)==================" | tee -a log_file
 
 
-dnf module enable maven:3.9 -y
+dnf module enable maven:3.9 -y  &>> $log_file
 check_status $? "enable Maven..."
 
-dnf install maven java-25-openjdk-devel -y
+dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? "Install Maven..."
 
-alternatives --set java "java-21-openjdk.x86_64 (/usr/lib/jvm/java-21-openjdk-21.0.12.1.1-1.2.el9.x86_64/bin/java)"
+alternatives --set java "java-21-openjdk.x86_64 (/usr/lib/jvm/java-21-openjdk-21.0.12.1.1-1.2.el9.x86_64/bin/java)"  &>> $log_file
 check_status $? "Setting Java 21 as default Java version"
 
-echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
-source /etc/profile.d/java.sh
-echo $JAVA_HOME
+echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh  &>> $log_file
+source /etc/profile.d/java.sh &>> $log_file
+echo $JAVA_HOME  &>> $log_file
 check_status $? "java home version"
 
 # adding user,befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
 if [ $? -ne 0 ]; then
-    echo "${G}no user exist creating user${N}"
+    echo "${Y}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
-    check_status $? -e "${G}user added...as roboshop${N}"
+    check_status $? "user added to roboshop"
     else 
     echo -e "${Y} system user exist ..Skipping${N}"    
 fi
 
 #remove old files
-rm -rf /app
-check_status $? "remove old files app directory"  &>> $log_file
-mkdir /app
-check_status $? "Creating app directory"  &>> $log_file
+rm -rf /app  &>> $log_file
+check_status $? "remove old files app directory"  
+mkdir /app  &>> $log_file
+check_status $? "Creating app directory"  
 
 curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
 check_status $? "Downloading shipping"
 
-cd /app
+cd /app  &>> $log_file
 unzip /tmp/shipping.zip  &>> $log_file
 check_status $? "unzip shipping"  
 
-cd /app
-mvn clean package
+cd /app   &>> $log_file
+mvn clean package   &>> $log_file
 check_status $? "Installing dependencies"  
-mv target/shipping.jar shipping.jar
+mv target/shipping.jar shipping.jar  &>> $log_file
 check_status $? "moving shipping file"  
 
 dnf install mysql -y  &>> $log_file
@@ -105,7 +105,7 @@ if [ $? -ne 0 ]; then
     mysql -h mysql.$domain_name -uroot -pRoboShop@1 < /app/db/app-user.sql   | tee -a $log_file
     check_status $? "Create the app user"
     else
-    echo "User exist"  | tee -a $log_file
+    echo "${Y}User exist...{N}"  | tee -a $log_file
 fi      
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
