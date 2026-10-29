@@ -45,7 +45,24 @@ check_status $? "Disable Nginx"
 
 dnf install nginx -y &>> $log_file
 check_status $? "Install Nginx"
+# =========================
+# # Prepare Nginx configuration
+# sed -i "s/DOMAIN_NAME/${domain_name}/g" "$script_dir/roboshop.conf"
 
+# cp "$script_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf
+# check_status $? "Prepare Nginx config"
+
+# # Validate configuration
+# nginx -t &>> "$log_file"
+# check_status $? "Check Nginx configuration"
+
+# # Enable and start Nginx
+# systemctl enable nginx &>> "$log_file"
+# check_status $? "Enable Nginx"
+
+# systemctl restart nginx &>> "$log_file"
+# check_status $? "Start Nginx"
+# =========
 systemctl enable nginx  &>> $log_file
 check_status $? "enable Nginx"
 
