@@ -29,10 +29,10 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "...[error]...${R} $2.. Failed...${N}.... at $(timestamp)"
-     exit 1
-    else
-     echo -e "...[info]...${G} $2.. success...${N}.....at $(timestamp)"|
+        echo -e "...[error]...${R} $2.. Failed...${N}.... at $(timestamp)"
+        exit 1
+        else
+        echo -e "...[info]...${G} $2.. success...${N}.....at $(timestamp)"
     fi
 }
 
