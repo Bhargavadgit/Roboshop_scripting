@@ -47,7 +47,8 @@ sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
 systemctl restart mongod  &>> log_file
 check_status $? "restarting Mongodb"
 
-systemctl status mongod | tee -a log_file
+systemctl status mongod  &>> log_file
+check_status $? "status of Mongodb" 
 
 echo "Total time ::$SECONDS"
 echo "===============Script end $(timestamp) ============"
