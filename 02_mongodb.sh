@@ -23,16 +23,16 @@ timestamp(){
 }
 
 check_status(){
-    if [ "$1" -ne 0 ]; then  
-        echo "$2 success"
+    if [ "$1" -eq 0 ]; then  
+        echo -e "${G} $2 success...${N}..$(timestamp)"
     else
-       echo "$2 failed"
+       echo -e "${R} $2 Failed...${N}..$(timestamp)"
         exit 1
     fi
 }
 echo "==============Script start $(timestamp) ============"
 cp mongo.repo /etc/yum.repos.d/mongo.repo
-check_status -e $?  "${G}..Mongo Repo copied...${N}"
+check_status  $?  "..Mongo Repo copied..."
 
 dnf install mongodb-org -y  &>> log_file
 check_status $? "Installing Mongodb"
