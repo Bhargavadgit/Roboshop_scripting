@@ -236,3 +236,162 @@ validate $? "Restarting/Starting shipping"
 
 
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+if [ "$user_id" -ne 0 ]; then
+    echo "Please run this script with sudo access."
+    exit 1
+fi
+
+# Create log directory
+mkdir -p "$logs_folder"
+
+# Timestamp function
+timestamp() {
+    date "+%F %T"
+}
+
+# Validation function
+validate() {
+    local exit_code=$1
+    local message=$2
+
+    if [ "$exit_code" -ne 0 ]; then
+        echo -e "$(timestamp) [ERROR] ${message}..${R}FAILED${N}" | tee -a "$log_file"
+        exit 1
+    else
+        echo -e "$(timestamp) [INFO] ${message}..${G}SUCCESS${N}" | tee -a "$log_file"
+    fi
+}
+
+echo "$(timestamp) [INFO] ==== Script started Execution =====" | tee -a "$log_file"
+
+# Install Maven and Java 25
+dnf install maven java-25-openjdk-devel unzip curl -y &>> "$log_file"
+validate $? "Installing Maven and Java 25"
+
+# Configure Java 25
+java_path=$(find /usr/lib/jvm -path '*/bin/java' -type f | grep '25' | head -1)
+
+if [ -z "$java_path" ]; then
+    echo "$(timestamp) [ERROR] Java 25 executable not found" | tee -a "$log_file"
+    exit 1
+fi
+
+alternatives --set java "$java_path" &>> "$log_file"
+validate $? "Setting Java 25 as default"
+
+# Configure JAVA_HOME for Maven
+java_home=$(dirname "$(dirname "$(readlink -f "$java_path")")")
+
+cat > /etc/profile.d/java.sh <<EOF
+export JAVA_HOME="$java_home"
+export PATH="\$JAVA_HOME/bin:\$PATH"
+EOF
+
+export JAVA_HOME="$java_home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+echo "$(timestamp) [INFO] JAVA_HOME=$JAVA_HOME" | tee -a "$log_file"
+validate $? "Setting JAVA_HOME for Maven"
+
+# Create system user
+if id "$app_user" &>> "$log_file"; then
+    echo "$(timestamp) [INFO] System user already exists..SKIPPING" | tee -a "$log_file"
+else
+    useradd --system --home /app --shell /sbin/nologin \
+        --comment "roboshop system user" "$app_user" &>> "$log_file"
+    validate $? "Creating system user"
+fi
+
+# Remove old application
+rm -rf /app
+validate $? "Removing old code"
+
+# Create application directory
+mkdir -p /app
+validate $? "Creating app directory"
+
+# Download Shipping application
+curl -fL -o /tmp/shipping.zip \
+    https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip \
+    &>> "$log_file"
+validate $? "Downloading shipping"
+
+# Extract application
+unzip -o /tmp/shipping.zip -d /app &>> "$log_file"
+validate $? "Unzipping shipping"
+
+# Verify Maven project
+if [ ! -f /app/pom.xml ]; then
+    echo "$(timestamp) [ERROR] pom.xml not found in /app" | tee -a "$log_file"
+    find /app -name pom.xml -print | tee -a "$log_file"
+    exit 1
+fi
+
+# Build application
+cd /app || exit 1
+mvn clean package &>> "$log_file"
+validate $? "Building shipping application"
+
+# Move application JAR
+if [ ! -f /app/target/shipping.jar ]; then
+    echo "$(timestamp) [ERROR] /app/target/shipping.jar not found" | tee -a "$log_file"
+    exit 1
+fi
+
+mv /app/target/shipping.jar /app/shipping.jar
+validate $? "Moving shipping.jar file"
+
+# Configure systemd service
+# These variables must be defined in your environment or script.
+if [ -z "$domain_name" ] || [ -z "$scripts_dir" ]; then
+    echo "$(timestamp) [ERROR] domain_name or scripts_dir is not configured" | tee -a "$log_file"
+    exit 1
+fi
+
+if [ ! -f "$scripts_dir/shipping.service" ]; then
+    echo "$(timestamp) [ERROR] shipping.service not found in $scripts_dir" | tee -a "$log_file"
+    exit 1
+fi
+
+sed "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service" \
+    > /etc/systemd/system/shipping.service
+validate $? "Configuring shipping service"
+
+# Install MySQL client
+dnf install mysql -y &>> "$log_file"
+validate $? "Installing MySQL client"
+
+# Check whether shipping master data exists
+count=$(mysql -h "mysql.${domain_name}" -u root -pRoboShop@1 \
+    -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> "$log_file")
+mysql_status=$?
+
+if [ "$mysql_status" -ne 0 ]; then
+    echo "$(timestamp) [ERROR] Could not query MySQL. Check connectivity and credentials." | tee -a "$log_file"
+    exit 1
+fi
+
+if [ -z "$count" ] || [ "$count" -eq 0 ]; then
+    mysql -h "mysql.${domain_name}" -u root -pRoboShop@1 \
+        < /app/db/master-data.sql 2>> "$log_file"
+    validate $? "Loading shipping master data"
+else
+    echo "$(timestamp) [INFO] Master data already loaded..SKIPPING" | tee -a "$log_file"
+fi
+
+# Create application database user
+mysql -h "mysql.${domain_name}" -u root -pRoboShop@1 \
+    < /app/db/app-user.sql 2>> "$log_file"
+validate $? "Creating application database user"
+
+# Start Shipping service
+systemctl daemon-reload &>> "$log_file"
+validate $? "Reloading systemd"
+
+systemctl enable shipping &>> "$log_file"
+validate $? "Enabling shipping service"
+
+systemctl restart shipping &>> "$log_file"
+validate $? "Restarting shipping service"
+
+echo "$(timestamp) [INFO] Script completed successfully in $SECONDS seconds" | tee -a "$log_file"
