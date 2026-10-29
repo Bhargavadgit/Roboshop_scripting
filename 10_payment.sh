@@ -29,43 +29,43 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "${R} $2.. Failed...${N} at $(timestamp)"| tee -a log_file
+     echo -e "...[error]....${R} $2.. Failed...${N} at $(timestamp)"
      exit 1
     else
-     echo -e "${G} $2.. success...${N} at $(timestamp)"| tee -a log_file
+     echo -e "..[info]...${G} $2.. success...${N} at $(timestamp)"
     fi
 }
 
 echo "===================Script Started at $(timestamp)==================" | tee -a log_file
 
-dnf install python3.14 python3.14-pip -y
+dnf install python3.14 python3.14-pip -y &>> $log_file
 check_status $? "Installed Python"
 
 # adding user,befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
 if [ $? -ne 0 ]; then
-    echo "${G}no user exist creating user${N}"
+    echo "${Y}no user exist creating user${N}"
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
-    check_status $? -e "${G}user added...as roboshop${N}"
+    check_status $? -e "user added to roboshop"
     else 
     echo -e "${Y} system user exist ..Skipping${N}"    
 fi
 
 #remove old files
-rm -rf /app
+rm -rf /app  &>> $log_file
 check_status $? "remove old files app directory"  &>> $log_file
 
-mkdir /app
+mkdir /app   &>> $log_file
 check_status $? "Creating app directory"  &>> $log_file
 
 curl -L -o /tmp/payment.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/payment-v4.zip
 check_status $? "Downloading payment"
 
-cd /app
+cd /app  &>> $log_file
 unzip /tmp/payment.zip  &>> $log_file
 check_status $? "unzip payment"  
 
-cd /app
+cd /app  &>> $log_file
 python3.14 -m venv /app/.venv &>> $log_file
 check_status $? "Creating virtual environment"  
 
