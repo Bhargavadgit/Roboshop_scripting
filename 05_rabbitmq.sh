@@ -27,14 +27,14 @@ timestamp(){
 
 check_status(){
 if [ $1 -ne 0 ]; then
-    echo -e "$2 ${R}failed${N} at $(timestamp)" | tee -a log_file
+    echo -e "...[error]....$2.... ${R}failed${N} at $(timestamp)" 
     exit 1
 else
-    echo -e "$2 ${G}success${N}at $(timestamp)"  | tee -a log_file  
+    echo -e "...[info]....$2.... ${G}success${N}at $(timestamp)"    
 fi
 }
 
-echo "================Script started $(timestamp)================="
+echo "================Script started $(timestamp)=================" | tee -a $logs_file
 
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>> $log_file
 check_status $? "Coping rabbitmq.repo......"
@@ -57,7 +57,8 @@ fi
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>> $log_file
 check_status $? "setting permissions for user in roboshop"
 
-echo "================Script ended $(timestamp)================="| tee -a $logs_file
 echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+echo "================Script ended $(timestamp)================="| tee -a $logs_file
+# echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
 
 
