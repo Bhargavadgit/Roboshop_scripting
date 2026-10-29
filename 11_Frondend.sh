@@ -29,7 +29,7 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "$...[error]...{R}.. $2.. Failed...${N} at $(timestamp)"
+     echo -e "...[error]...{R}.. $2.. Failed...${N} at $(timestamp)"
      exit 1
     else
      echo -e "...[info]...${G}..$2.. success...${N} at $(timestamp)"
@@ -45,6 +45,7 @@ check_status $? "enable & install Nginx"
 
 systemctl enable nginx  &>> $log_file
 check_status $? "enable Nginx"
+
 systemctl start nginx  &>> $log_file
 check_status $? "start Nginx"
 
