@@ -19,7 +19,7 @@ if [ $user_id -ne 0 ]; then
 fi
 
 timestamp(){
-    (date +"%F %t")
+    (date +"%F %T")
 }
 
 check_status(){
