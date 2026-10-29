@@ -23,7 +23,7 @@ timestamp(){
 }
 
 check_status(){
-    if [ $1 -eq 0 ]; then  
+    if [ "$1" -eq 0 ]; then  
         echo "$2 success"
     else
        echo "$2 failed"
