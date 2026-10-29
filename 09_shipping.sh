@@ -46,7 +46,9 @@ check_status $? "enable Maven..."
 dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? "Install Maven..."
 
-alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java)"  &>> $log_file
+# alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java)"  &>> $log_file
+# check_status $? "Setting Java 25 as default Java version"
+alternatives --set java /usr/lib/jvm/java-25-openjdk/bin/java &>> "$log_file"
 check_status $? "Setting Java 25 as default Java version"
 
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh  &>> $log_file
