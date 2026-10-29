@@ -44,9 +44,9 @@ dnf install nginx -y   &>> $log_file
 check_status $? "enable & install Nginx"
 
 systemctl enable nginx  &>> $log_file
-check_status $? "enable & start Nginx"
+check_status $? "enable Nginx"
 systemctl start nginx  &>> $log_file
-check_status $? "enable & start Nginx"
+check_status $? "start Nginx"
 
 rm -rf /usr/share/nginx/html/* &>> $log_file
 check_status $? "Remove the default content"
