@@ -40,11 +40,11 @@ echo "===================Script Started at $(timestamp)==================" | tee
 dnf module enable maven:3.9 -y  &>> $log_file
 check_status $? "enable maven" 
 
-dnf install maven java-21-openjdk-devel -y  &>> $log_file
+dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? " maven java 21" 
 
-#alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java" &>> $log_file
-alternatives --set java "/usr/lib/jvm/java-21-openjdk/bin/java"  &>> $log_file
+alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java" &>> $log_file
+#alternatives --set java "/usr/lib/jvm/java-21-openjdk/bin/java"  &>> $log_file
 check_status $? "Setting Java 21 as default Java version"
 
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
