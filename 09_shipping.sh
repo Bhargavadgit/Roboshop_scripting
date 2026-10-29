@@ -155,14 +155,14 @@ timestamp(){
 
 validate(){
     if [ $1 -ne 0 ]; then
-        echo -e "$(timestamp) [ERROR] ${2}..${R}FAILED${N}" | tee -a $logs_file
+        echo -e "$(timestamp) [ERROR] ${2}..${R}FAILED${N}" | tee -a $log_file
         exit 1
     else
-        echo -e "$(timestamp) [INFO] ${2}..${G}SUCCESS${N}" | tee -a $logs_file
+        echo -e "$(timestamp) [INFO] ${2}..${G}SUCCESS${N}" | tee -a $log_file
     fi
 }
 
-echo "$(timestamp) [INFO] ==== Script started Execution =====" | tee -a $logs_file
+echo "$(timestamp) [INFO] ==== Script started Execution =====" | tee -a $log_file
 
 dnf install maven java-25-openjdk-devel -y &>> "$log_file"
 check_status $? "Install Maven..."
@@ -175,9 +175,9 @@ source /etc/profile.d/java.sh
 echo $JAVA_HOME
 validate $? "Setting JAVA_HOME for maven"
 
-id roboshop &>> $logs_file
+id roboshop &>> $log_file
 if [ $? -ne 0 ]; then
-    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $logs_file
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
     validate $? "Creating system user"
 else
     echo -e "$(timestamp) [INFO] System user roboshop already exist...${Y}SKIPPING${N}"
@@ -189,14 +189,14 @@ validate $? "Removing old code"
 mkdir -p /app
 validate $? "Creating app directory"
 
-curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip &>> $logs_file
+curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip &>> $log_file
 validate $? "Downloading shipping"
 
 cd /app
-unzip /tmp/shipping.zip &>> $logs_file
+unzip /tmp/shipping.zip &>> $log_file
 validate $? "Unzipping shipping"
 
-mvn clean package &>> $logs_file
+mvn clean package &>> $log_file
 validate $? "Installing dependencies"
 
 mv target/shipping.jar shipping.jar
@@ -205,10 +205,10 @@ validate $? "Moving shipping.jar file"
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$scripts_dir/shipping.service"
 cp "$scripts_dir/shipping.service" /etc/systemd/system/shipping.service
 
-dnf install mysql -y &>> $logs_file
+dnf install mysql -y &>> $log_file
 validate $? "Installing MySQL client"
 
-count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
+count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
 if [ -z "$count" ] || [ "$count" -eq 0 ]; then
     mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/master-data.sql
     validate $? "Loading shipping data"
@@ -219,8 +219,8 @@ fi
 mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql
 validate $? "Creating APP user"
 
-systemctl daemon-reload &>> $logs_file
-systemctl enable shipping &>> $logs_file
+systemctl daemon-reload &>> $log_file
+systemctl enable shipping &>> $log_file
 systemctl restart shipping
 validate $? "Restarting/Starting shipping"
 
