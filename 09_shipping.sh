@@ -100,6 +100,8 @@ check_status $? "Moving shipping file"
 dnf install mysql -y &>> "$log_file"
 check_status $? "Installing MySQL client"
 
+
+
 # before loading the cities check if already exist or not, why because first time there is no cities it will load then
 #through an error for loading cts
 # check in google for geeting only number output  in shell command to find records count in mysql table
