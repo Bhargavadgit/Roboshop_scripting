@@ -36,36 +36,108 @@ check_status(){
     fi
 }
 
-echo "===================Script Started at $(timestamp)==================" | tee -a log_file
+# echo "===================Script Started at $(timestamp)==================" | tee -a log_file
 
-dnf module disable nginx -y &>> $log_file
-dnf module enable nginx:1.26 -y  &>> $log_file
-dnf install nginx -y   &>> $log_file
-check_status $? "enable & install Nginx"
+# dnf module disable nginx -y &>> $log_file
+# dnf module enable nginx:1.26 -y  &>> $log_file
+# dnf install nginx -y   &>> $log_file
+# check_status $? "enable & install Nginx"
 
-systemctl enable nginx  &>> $log_file
-check_status $? "enable Nginx"
+# systemctl enable nginx  &>> $log_file
+# check_status $? "enable Nginx"
 
-systemctl start nginx  &>> $log_file
-check_status $? "start Nginx"
+# systemctl start nginx  &>> $log_file
+# check_status $? "start Nginx"
 
-rm -rf /usr/share/nginx/html/* &>> $log_file
-check_status $? "Remove the default content"
+# rm -rf /usr/share/nginx/html/* &>> $log_file
+# check_status $? "Remove the default content"
 
-curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip  &>> $log_file
-cd /usr/share/nginx/html
-unzip /tmp/frontend.zip  &>> $log_file
-check_status $? "download front end content"
+# curl -L -o /tmp/frontend.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip  &>> $log_file
+# cd /usr/share/nginx/html
+# unzip /tmp/frontend.zip  &>> $log_file
+# check_status $? "download front end content"
 
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/roboshop.conf" 
-cp "$script_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf
-check_status $? "Copied roboshop config"
+# sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/roboshop.conf" 
+# cp "$script_dir/roboshop.conf" /etc/nginx/default.d/roboshop.conf
+# check_status $? "Copied roboshop config"
 
-nginx -t   | tee -a log_file
-check_status $? "check syntax for roboshop config"
+# nginx -t   | tee -a log_file
+# check_status $? "check syntax for roboshop config"
 
-systemctl restart nginx   | tee -a log_file
-check_status $? "restart nginx"
+# systemctl restart nginx   | tee -a log_file
+# check_status $? "restart nginx"
 
-echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
-echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
+# echo "$(timestamp) [INFO] Script completed in $SECONDS seconds"
+# echo "$(timestamp) [INFO] ==== Script completed Execution =====" | tee -a $logs_file
+
+
+#!/bin/bash
+
+user_id=$(id -u)
+logs_folder="/var/log/Roboshop_scripting"
+log_file="${logs_folder}/11_Frondend.sh.log"
+script_dir=$(dirname "$(realpath "$0")")
+domain_name="bhar92s.store"
+
+R="\e[31m"
+G="\e[32m"
+N="\e[0m"
+
+if [ "$user_id" -ne 0 ]; then
+    echo "Not root user"
+    exit 1
+fi
+
+mkdir -p "$logs_folder"
+
+timestamp() {
+    date "+%F %T"
+}
+
+check_status() {
+    if [ "$1" -ne 0 ]; then
+        echo -e "...[error]...${R}.. $2 Failed...${N} at $(timestamp)" | tee -a "$log_file"
+        exit 1
+    else
+        echo -e "...[info]...${G}.. $2 success...${N} at $(timestamp)" | tee -a "$log_file"
+    fi
+}
+
+echo "=================== Script Started at $(timestamp) ==================" | tee -a "$log_file"
+
+dnf module disable nginx -y &>> "$log_file"
+dnf module enable nginx:1.26 -y &>> "$log_file"
+dnf install nginx -y &>> "$log_file"
+check_status $? "Install Nginx"
+
+# Download frontend files
+curl -fL -o /tmp/frontend.zip \
+    https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/frontend-v4.zip \
+    &>> "$log_file"
+check_status $? "Download frontend content"
+
+mkdir -p /usr/share/nginx/html
+rm -rf /usr/share/nginx/html/*
+unzip -o /tmp/frontend.zip -d /usr/share/nginx/html &>> "$log_file"
+check_status $? "Extract frontend content"
+
+# Copy Nginx configuration BEFORE starting Nginx
+sed "s/DOMAIN_NAME/${domain_name}/g" "$script_dir/roboshop.conf" \
+    > /tmp/roboshop.conf
+check_status $? "Prepare Nginx config"
+
+cp /tmp/roboshop.conf /etc/nginx/default.d/roboshop.conf
+check_status $? "Copy Nginx config"
+
+# Validate the final configuration before starting the service
+nginx -t &>> "$log_file"
+check_status $? "Check Nginx configuration"
+
+systemctl enable nginx &>> "$log_file"
+check_status $? "Enable Nginx"
+
+systemctl restart nginx &>> "$log_file"
+check_status $? "Start Nginx"
+
+echo "$(timestamp) [INFO] Script completed in $SECONDS seconds" | tee -a "$log_file"
+echo "$(timestamp) [INFO] ==== Script completed execution ====" | tee -a "$log_file"
