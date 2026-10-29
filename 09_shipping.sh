@@ -37,92 +37,60 @@ check_status(){
 }
 
 echo "===================Script Started at $(timestamp)==================" | tee -a log_file
-
-
 dnf module enable maven:3.9 -y  &>> $log_file
-check_status $? "enable Maven..."
+check_status $? "enable maven" 
 
-# dnf install maven java-21-openjdk-devel -y  &>> $log_file
 dnf install maven java-25-openjdk-devel -y  &>> $log_file
-check_status $? "Install Maven..."
+check_status $? " maven java 25" 
 
-# alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java)"  &>> $log_file
-# check_status $? "Setting Java 25 as default Java version"
-alternatives --set java /usr/lib/jvm/java-25-openjdk/bin/java &>> "$log_file"
+alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java" &>> $log_file
 check_status $? "Setting Java 25 as default Java version"
 
-echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh  &>> $log_file
-source /etc/profile.d/java.sh &>> $log_file
-echo $JAVA_HOME  &>> $log_file
-check_status $? "java home version"
+echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
+source /etc/profile.d/java.sh
+echo $JAVA_HOME
+check_status $? "Setting Java home version"
 
-# adding user,befor check if any users already added or not use command id roboshop
+#Create Application User
 id roboshop &>> $log_file
-if [ $? -ne 0 ]; then
-    echo "${Y}no user exist creating user${N}"
+if  [ $? -ne 0]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>> $log_file
-    check_status $? "user added to roboshop"
+    check_status $? "setting up application user"
     else 
-    echo -e "${Y} system user exist ..Skipping${N}"    
-fi
-
-#remove old files
+    echo "..[info]...application user exist ...{Y}skipping{N}...."
+fi  
 rm -rf /app  &>> $log_file
-check_status $? "remove old files app directory"  
+check_status $? "Removing old data in app"
+
 mkdir /app  &>> $log_file
-check_status $? "Creating app directory"  
+check_status $? "creating app directory"
 
 curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
-check_status $? "Downloading shipping"
-
-cd /app  &>> $log_file
-unzip /tmp/shipping.zip  &>> $log_file
-check_status $? "unzip shipping"  
-
-# cd /app   &>> $log_file
-# mvn clean package   &>> $log_file
-# check_status $? "Installing dependencies"
-
-# mv target/shipping.jar shipping.jar  &>> $log_file
-# check_status $? "moving shipping file"  
-
-# dnf install mysql -y  &>> $log_file
-# check_status $? "Install the MySQL client"  
-cd /app &>> "$log_file"
-check_status $? "Changing directory to /app"
-
-mvn clean package &>> "$log_file"
-check_status $? "Building shipping application"
-
-mv target/shipping.jar shipping.jar &>> "$log_file"
-check_status $? "Moving shipping file"
-
-dnf install mysql -y &>> "$log_file"
-check_status $? "Installing MySQL client"
 
 
-# before loading the cities check if already exist or not, why because first time there is no cities it will load then
-#through an error for loading cts
-# check in google for geeting only number output  in shell command to find records count in mysql table
-count=$(mysql -h mysql.bhar92s.store -uroot -pRoboShop@1  -N -B -e "SELECT COUNT(*) FROM cities.cities;") &>> $log_file
-check_status $? "checking cities count"
+cd /app
+unzip /tmp/shipping.zip
+check_status $? "unzip " 
 
-if  [ $count -eq 0 ]; then
-        mysql -h mysql.$domain_name -uroot -pRoboShop@1 < /app/db/master-data.sql  | tee -a $log_file
-        check_status $? "loading cities"  
-    else
-    echo "cities loaded already .....${Y}Skipping${N}"   | tee -a $log_file
-fi        
+cd /app
+mvn clean package
+check_status $? "MVN pacakge " 
 
-id roboshop &>> $log_file
-check_status $? "checking user existance"   | tee -a $log_file
+mv target/shipping.jar shipping.jar
+check_status $? "Moving pacakge to shipping jar " 
 
-if [ $? -ne 0 ]; then
-    mysql -h mysql.$domain_name -uroot -pRoboShop@1 < /app/db/app-user.sql   | tee -a $log_file
-    check_status $? "Create the app user"
-    else
-    echo "${Y}User exist...{N}"  | tee -a $log_file
-fi      
+dnf install mysql -y
+check_status $? "Install sql client " 
+
+# check cities already exist or not 
+cities_count=$(mysql -h "mysql.$domain_name"-u root -p RoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
+#count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
+if  [ -z $cities_count ] || [ cities_count -ne 0 ]; then
+    mysql -h mysql.$domain_name -u root -p RoboShop@1 < /app/db/master-data.sql
+     check_status $? "Loading shipping data"
+     else 
+    echo -e "$(timestamp) [INFO] Master data already loaded...${Y}SKIPPING${N}"
+fi     
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
 cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
@@ -136,7 +104,6 @@ check_status $? "enable shipping"
 
 systemctl start shipping  &>> $log_file
 check_status $? "start shipping" 
-
 
 systemctl restart shipping | tee -a $log_file
 check_status $? "restart shipping"  
