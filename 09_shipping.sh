@@ -37,8 +37,9 @@ check_status(){
 }
 
 echo "===================Script Started at $(timestamp)==================" | tee -a log_file
-dnf module enable maven:3.9 -y  &>> $log_file
-check_status $? "enable maven" 
+#dnf module enable maven:3.9 -y  &>> $log_file
+dnf install maven -y &>> $log_file
+check_status $? "install maven" 
 
 dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? " maven java 25" 
@@ -86,7 +87,7 @@ check_status $? "Install sql client "
 cities_count=$(mysql -h "mysql.$domain_name"-u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
 #count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
 if  [ -z $cities_count ] || [ cities_count -ne 0 ]; then
-    mysql -h mysql.$domain_name -u root -p RoboShop@1 < /app/db/master-data.sql
+    mysql -h mysql.$domain_name -u root -pRoboShop@1 < /app/db/master-data.sql
      check_status $? "Loading shipping data"
      else 
     echo -e "$(timestamp) [INFO] Master data already loaded...${Y}SKIPPING${N}"
