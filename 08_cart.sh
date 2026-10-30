@@ -70,20 +70,23 @@ check_status $? "app modules..."
 unzip /tmp/cart.zip &>> $log_file
 check_status $? "unzip modules..."
 
-# # changes in cart.service file
-# sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/cart.service"
-# cp "$script_dir/cart.service" /etc/systemd/system/cart.service
-# check_status $? "copy service file..."
+npm install 
+validate $? "Installing dependencies"
 
-# systemctl daemon-reload  &>> $log_file
-# check_status $? "daemon-reload..cart."
+# changes in cart.service file
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/cart.service"
+cp "$script_dir/cart.service" /etc/systemd/system/cart.service
+check_status $? "copy service file..."
 
-# systemctl enable cart  &>> $log_file
-# check_status $? "enable..cart."
+systemctl daemon-reload  &>> $log_file
+check_status $? "daemon-reload..cart."
 
-# systemctl start cart  &>> $log_file
-# check_status $? "start..cart."
+systemctl enable cart  &>> $log_file
+check_status $? "enable..cart."
 
-# systemctl restart cart  &>> $log_file
-# check_status $? "restart..cart."
-# echo "===================Script ended at $(timestamp)==================" | tee -a $log_file
+systemctl start cart  &>> $log_file
+check_status $? "start..cart."
+
+systemctl restart cart  &>> $log_file
+check_status $? "restart..cart."
+echo "===================Script ended at $(timestamp)==================" | tee -a $log_file
