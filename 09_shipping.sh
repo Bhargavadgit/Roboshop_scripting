@@ -93,8 +93,12 @@ if  [ -z $cities_count ] || [ cities_count -ne 0 ]; then
     echo -e "$(timestamp) [INFO] Master data already loaded...${Y}SKIPPING${N}"
 fi     
 
+mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql
+check_status $? "Creating APP user"
+
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
 cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
+
 
 
 systemctl daemon-reload  &>> $log_file
