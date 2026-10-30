@@ -83,7 +83,7 @@ dnf install mysql -y
 check_status $? "Install sql client " 
 
 # check cities already exist or not 
-cities_count=$(mysql -h "mysql.$domain_name"-u root -p RoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
+cities_count=$(mysql -h "mysql.$domain_name"-u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
 #count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
 if  [ -z $cities_count ] || [ cities_count -ne 0 ]; then
     mysql -h mysql.$domain_name -u root -p RoboShop@1 < /app/db/master-data.sql
