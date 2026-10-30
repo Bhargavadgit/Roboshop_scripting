@@ -43,11 +43,16 @@ if [ "$instance" != "Frontend" ];then
         
         
 else
-     ip=$(aws ec2 describe-instances \
-         --instance-ids ${Instance_id} \
-        --query "Reservations[].Instances[].publicIpAddress" \
-        --output text
-        )
+    #  ip=$(aws ec2 describe-instances \
+    #      --instance-ids ${Instance_id} \
+    #     --query "Reservations[].Instances[].publicIpAddress" \
+    #     --output text
+    #     )
+        ip=$(aws ec2 describe-instances \
+            --instance-ids "$Instance_id" \
+            --query "Reservations[0].Instances[0].PublicIpAddress" \
+            --output text)
+        echo "Launched instance is Frontend with Public IP: $ip"
         r53_record="${domain_name}"
          echo "Launched instance is  Froent end with  public ip"
         echo "${domain_name}"
