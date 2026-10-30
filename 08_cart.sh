@@ -29,10 +29,10 @@ timestamp(){
 
 check_status(){
     if  [ $1 -ne 0 ]; then
-     echo -e "${R} $2.. Failed...${N} at $(timestamp)"| tee -a log_file
+     echo -e "${R} $2.. Failed...${N} at $(timestamp)"
      exit 1
     else
-     echo -e "${G} $2.. success...${N} at $(timestamp)"| tee -a log_file
+     echo -e "${G} $2.. success...${N} at $(timestamp)"
     fi
 }
 
@@ -55,19 +55,19 @@ fi
 
 
 # removing old data
-rm -rf /app
+rm -rf /app &>> $log_file
 check_status $? "removing old files"
 
-mkdir /app
+mkdir /app &>> $log_file
 check_status $? "Download the Application"
 
 curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip
 check_status $? "Download user"
 
-cd /app
+cd /app &>> $log_file
 check_status $? "app modules..."
 
-unzip /tmp/cart.zip
+unzip /tmp/cart.zip &>> $log_file
 check_status $? "unzip modules..."
 
 # # changes in cart.service file
@@ -75,15 +75,15 @@ check_status $? "unzip modules..."
 # cp "$script_dir/cart.service" /etc/systemd/system/cart.service
 # check_status $? "copy service file..."
 
-# systemctl daemon-reload
+# systemctl daemon-reload  &>> $log_file
 # check_status $? "daemon-reload..cart."
 
-# systemctl enable cart
+# systemctl enable cart  &>> $log_file
 # check_status $? "enable..cart."
 
-# systemctl start cart
+# systemctl start cart  &>> $log_file
 # check_status $? "start..cart."
 
-# systemctl restart cart
+# systemctl restart cart  &>> $log_file
 # check_status $? "restart..cart."
 # echo "===================Script ended at $(timestamp)==================" | tee -a log_file

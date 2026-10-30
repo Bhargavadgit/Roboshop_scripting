@@ -36,7 +36,7 @@ check_status(){
     fi
 }
 
-echo "===================Script Started at $(timestamp)==================" | tee -a log_file
+echo "===================Script Started at $(timestamp)==================" | tee -a $log_file
 #dnf module enable maven:3.9 -y  &>> $log_file
 dnf install maven -y &>> $log_file
 check_status $? "install maven" 
@@ -109,4 +109,4 @@ check_status $? "start shipping"
 systemctl restart shipping | tee -a $log_file
 check_status $? "restart shipping"  
 
-echo "===================Script ended at $(timestamp)==================" | tee -a log_file
+echo "===================Script ended at $(timestamp)==================" | tee -a $log_file

@@ -36,7 +36,7 @@ check_status(){
     fi
 }
 
-echo "===================Script Started at $(timestamp)==================" | tee -a log_file
+echo "===================Script Started at $(timestamp)==================" | tee -a $log_file
 
 dnf module disable nodejs -y  &>> $log_file
 check_status $? "Diabled default verson"
@@ -94,4 +94,4 @@ systemctl restart user  &>> $log_file
 check_status $? "restart user..."
 
 echo "Total time ::$SECONDS"
-echo "===================Script ebded at $(timestamp)==================" | tee -a log_file
+echo "===================Script ebded at $(timestamp)==================" | tee -a $log_file
