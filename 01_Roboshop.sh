@@ -45,7 +45,7 @@ if [ "$instance" != "Frontend" ];then
 else
     #  ip=$(aws ec2 describe-instances \
     #      --instance-ids ${Instance_id} \
-    #     --query "Reservations[].Instances[].publicIpAddress" \
+    #     --query "Reservations[].Instances[].PublicIpAddress" \
     #     --output text
     #     )
         ip=$(aws ec2 describe-instances \
