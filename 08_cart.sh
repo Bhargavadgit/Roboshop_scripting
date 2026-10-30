@@ -71,7 +71,7 @@ unzip /tmp/cart.zip
 check_status $? "unzip modules..."
 
 # changes in cart.service file
-sed -i "s/DOMAIN_NAME/$domaindomain_name/g" "$script_dir/cart.service"
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/cart.service"
 cp "$script_dir/cart.service" /etc/systemd/system/cart.service
 check_status $? "copy service file..."
 
