@@ -1,6 +1,6 @@
 #!/bin/bash
-#ami_id="ami-0055977a6e828a4f4" #RHEL 9
-ami_id="ami-0eec78ea4cbaaf5bd"  #RHEL10
+ami_id="ami-0055977a6e828a4f4" #RHEL 9
+#ami_id="ami-0eec78ea4cbaaf5bd"  #RHEL10
 instance_type="t3.micro"
 domain_name="bhar92s.store"
 hosted_zone="Z07751372GOQ7XKXVY478"
