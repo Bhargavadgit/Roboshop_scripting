@@ -74,8 +74,8 @@ check_status $? "app modules..."
 unzip /tmp/cart.zip &>> $log_file
 check_status $? "unzip modules..."
 
-npm install 
-validate $? "Installing dependencies"
+npm install &>> $log_file
+check_status $? "Installing dependencies"
 
 # changes in cart.service file
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/cart.service"
