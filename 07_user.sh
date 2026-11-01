@@ -56,47 +56,47 @@ if [ $? -ne 0 ]; then
     else 
     echo -e "${Y} system user exist ..Skipping${N}"    
 fi
-rm -rf /app &>> $log_file #deleteing existing App data
-check_status $?  "removeing old files of roboshop"
+# rm -rf /app &>> $log_file #deleteing existing App data
+# check_status $?  "removeing old files of roboshop"
 
-mkdir /app &>> $log_file # creating app directory
-check_status $? "Creating app directory"
+# mkdir /app &>> $log_file # creating app directory
+# check_status $? "Creating app directory"
 
-curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
-check_status $? "Downloading user"
+# curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
+# check_status $? "Downloading user"
 
-cd /app  &>> $log_file
-unzip /tmp/user.zip  &>> $log_file
-check_status $? "unzip modules..."
+# cd /app  &>> $log_file
+# unzip /tmp/user.zip  &>> $log_file
+# check_status $? "unzip modules..."
 
-npm install  &>> $log_file
-check_status $? "Install Dependencies..."
+# npm install  &>> $log_file
+# check_status $? "Install Dependencies..."
 
-# coping data from user.service
-# get realpath ----realpath $<filename>
-#get dir path -----dirname $(realpath"0")
-# get script dir ---$(dirname"$(realpath"$0")")
+# # coping data from user.service
+# # get realpath ----realpath $<filename>
+# #get dir path -----dirname $(realpath"0")
+# # get script dir ---$(dirname"$(realpath"$0")")
 
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service"
-cp "$script_dir/user.service" /etc/systemd/system/user.service
-check_status $? "copied user.service file..." | tee -a $log_file
+# sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service"
+# cp "$script_dir/user.service" /etc/systemd/system/user.service
+# check_status $? "copied user.service file..." | tee -a $log_file
 
-systemctl daemon-reload  &>> $log_file
-check_status $? "daemon-reload user..."
+# systemctl daemon-reload  &>> $log_file
+# check_status $? "daemon-reload user..."
 
-systemctl enable user  &>> $log_file
-check_status $? "enable user..."
+# systemctl enable user  &>> $log_file
+# check_status $? "enable user..."
 
-systemctl start user  &>> $log_file
-check_status $? "start user..."
+# systemctl start user  &>> $log_file
+# check_status $? "start user..."
 
-systemctl restart user  &>> $log_file
-check_status $? "restart user..."
+# systemctl restart user  &>> $log_file
+# check_status $? "restart user..."
 
-systemctl status user
-check_status $? "Status user..."
+# systemctl status user
+# check_status $? "Status user..."
 
-curl http://localhost:8080/health
+# curl http://localhost:8080/health
 
-echo "Total time ::$SECONDS"
-echo "===================Script ebded at $(timestamp)==================" | tee -a $log_file
+# echo "Total time ::$SECONDS"
+# echo "===================Script ebded at $(timestamp)==================" | tee -a $log_file
