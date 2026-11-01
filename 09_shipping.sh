@@ -44,14 +44,16 @@ check_status $? "install maven"
 dnf install maven java-25-openjdk-devel -y  &>> $log_file
 check_status $? " maven java 25" 
 
+#we are using Java25 version so we need to set it as default version
 alternatives --set java "/usr/lib/jvm/java-25-openjdk/bin/java" &>> $log_file
 #alternatives --set java "/usr/lib/jvm/java-21-openjdk/bin/java"  &>> $log_file
-check_status $? "Setting Java 21 as default Java version"
+check_status $? "Setting Java 25 as default Java version"
 
 echo "export JAVA_HOME=$(dirname $(dirname $(readlink -f /usr/bin/java)))" > /etc/profile.d/java.sh
 source /etc/profile.d/java.sh
 echo $JAVA_HOME
 check_status $? "Setting Java home version"
+
 
 #Create Application User
 id roboshop &>> $log_file
@@ -73,9 +75,8 @@ cd /app
 unzip /tmp/shipping.zip
 check_status $? "unzip " 
 
-cd /app
 mvn clean package
-check_status $? "MVN pacakge " 
+check_status $? "MVN pacakge dependencies"
 
 mv target/shipping.jar shipping.jar
 check_status $? "Moving pacakge to shipping jar " 
@@ -84,9 +85,9 @@ dnf install mysql -y
 check_status $? "Install sql client " 
 
 # check cities already exist or not 
-cities_count=$(mysql -h "mysql.$domain_name"-u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
-#count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $logs_file )
-if  [ -z $cities_count ] || [ cities_count -ne 0 ]; then
+cities_count=$(mysql -h "mysql.$domain_name"-u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
+#count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
+if  [ -z $cities_count ] || [ cities_count -eq 0 ]; then
     mysql -h mysql.$domain_name -u root -pRoboShop@1 < /app/db/master-data.sql
      check_status $? "Loading shipping data"
      else 
@@ -113,4 +114,8 @@ check_status $? "start shipping"
 systemctl restart shipping | tee -a $log_file
 check_status $? "restart shipping"  
 
+systemctl status shipping
+check_status $? "Status shipping" 
+
+echo "Total time ::$SECONDS"
 echo "===================Script ended at $(timestamp)==================" | tee -a $log_file

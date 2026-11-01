@@ -79,7 +79,7 @@ check_status $? "Install Dependencies..."
 
 sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service"
 cp "$script_dir/user.service" /etc/systemd/system/user.service
-check_status $? "copied user.service file..." | tee -a log_file
+check_status $? "copied user.service file..." | tee -a $log_file
 
 systemctl daemon-reload  &>> $log_file
 check_status $? "daemon-reload user..."
@@ -92,6 +92,11 @@ check_status $? "start user..."
 
 systemctl restart user  &>> $log_file
 check_status $? "restart user..."
+
+systemctl status user
+check_status $? "Status user..."
+
+curl http://localhost:8080/health
 
 echo "Total time ::$SECONDS"
 echo "===================Script ebded at $(timestamp)==================" | tee -a $log_file

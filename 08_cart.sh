@@ -36,12 +36,16 @@ check_status(){
     fi
 }
 
-echo "===================Script Started at $(timestamp)==================" | tee -a log_file
+echo "===================Script Started at $(timestamp)==================" | tee -a $log_file
 
 dnf module disable nodejs -y
+check_status $? "disable Nodejs"
+
 dnf module enable nodejs:24 -y
+check_status $? " enable Nodejs"
+
 dnf install nodejs -y
-check_status $? "diable defalut and enable install Nodejs"
+check_status $? "install Nodejs"
 
 # adding user,befor check if any users already added or not use command id roboshop
 id roboshop &>> $log_file
@@ -62,7 +66,7 @@ mkdir /app &>> $log_file
 check_status $? "Download the Application"
 
 curl -L -o /tmp/cart.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/cart-v4.zip
-check_status $? "Download user"
+check_status $? "Download Cart application"
 
 cd /app &>> $log_file
 check_status $? "app modules..."
@@ -89,4 +93,11 @@ check_status $? "start..cart."
 
 systemctl restart cart  &>> $log_file
 check_status $? "restart..cart."
+
+systemctl status cart
+check_status $? "status..cart."
+
+curl http://localhost:8080/health
+
+echo "Total time ::$SECONDS"
 echo "===================Script ended at $(timestamp)==================" | tee -a $log_file
