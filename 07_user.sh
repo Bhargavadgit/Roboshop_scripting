@@ -82,22 +82,18 @@ check_status $? "replacing domain name in user.service file..."
 cp "$script_dir/user.service" /etc/systemd/system/user.service  | tee -a $log_file
 check_status $? "copied user.service file..." 
 
-# systemctl daemon-reload  &>> $log_file
-# check_status $? "daemon-reload user..."
+systemctl daemon-reload  &>> $log_file
+check_status $? "daemon-reload user..."
 
-# systemctl enable user  &>> $log_file
-# check_status $? "enable user..."
+systemctl enable user  &>> $log_file
+check_status $? "enable user..."
 
-# systemctl start user  &>> $log_file
-# check_status $? "start user..."
+systemctl start user  &>> $log_file
+check_status $? "start user..."
 
-# systemctl restart user  &>> $log_file
-# check_status $? "restart user..."
+systemctl restart user  &>> $log_file
+check_status $? "restart user..."
 
-# systemctl status user
-# check_status $? "Status user..."
-
-# curl http://localhost:8080/health
 
 # echo "Total time ::$SECONDS"
 # echo "===================Script ebded at $(timestamp)==================" | tee -a $log_file
