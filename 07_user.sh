@@ -62,8 +62,8 @@ check_status $?  "removeing old files of roboshop"
 mkdir /app &>> $log_file # creating app directory
 check_status $? "Creating app directory"
 
-# curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
-# check_status $? "Downloading user"
+curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
+check_status $? "Downloading user"
 
 # cd /app  &>> $log_file
 # unzip /tmp/user.zip  &>> $log_file
