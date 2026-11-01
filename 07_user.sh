@@ -65,9 +65,9 @@ check_status $? "Creating app directory"
 curl -L -o /tmp/user.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/user-v4.zip
 check_status $? "Downloading user"
 
-# cd /app  &>> $log_file
-# unzip /tmp/user.zip  &>> $log_file
-# check_status $? "unzip modules..."
+cd /app  &>> $log_file
+unzip /tmp/user.zip  &>> $log_file
+check_status $? "unzip modules..."
 
 # npm install  &>> $log_file
 # check_status $? "Install Dependencies..."
