@@ -114,8 +114,6 @@ check_status $? "start shipping"
 systemctl restart shipping | tee -a $log_file
 check_status $? "restart shipping"  
 
-systemctl status shipping
-check_status $? "Status shipping" 
 
 echo "Total time ::$SECONDS"
 echo "===================Script ended at $(timestamp)==================" | tee -a $log_file
