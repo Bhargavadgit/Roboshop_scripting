@@ -77,7 +77,8 @@ check_status $? "Install Dependencies..."
 # #get dir path -----dirname $(realpath"0")
 # # get script dir ---$(dirname"$(realpath"$0")")
 
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service" | tee -a $log_file
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/user.service" &>> $log_file
+check_status $? "replacing domain name in user.service file..." 
 cp "$script_dir/user.service" /etc/systemd/system/user.service  | tee -a $log_file
 check_status $? "copied user.service file..." 
 
