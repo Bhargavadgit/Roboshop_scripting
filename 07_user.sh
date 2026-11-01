@@ -69,8 +69,8 @@ cd /app  &>> $log_file
 unzip /tmp/user.zip  &>> $log_file
 check_status $? "unzip modules..."
 
-# npm install  &>> $log_file
-# check_status $? "Install Dependencies..."
+npm install  &>> $log_file
+check_status $? "Install Dependencies..."
 
 # # coping data from user.service
 # # get realpath ----realpath $<filename>
