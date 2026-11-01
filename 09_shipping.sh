@@ -72,16 +72,20 @@ check_status $? "creating app directory"
 curl -L -o /tmp/shipping.zip https://raw.githubusercontent.com/daws-92s/roboshop-documentation/refs/heads/main/artifacts/shipping-v4.zip
 
 cd /app
-unzip /tmp/shipping.zip
+unzip /tmp/shipping.zip  &>> $log_file
 check_status $? "unzip " 
 
-mvn clean package
+mvn clean package  &>> $log_file
 check_status $? "MVN pacakge dependencies"
 
-mv target/shipping.jar shipping.jar
+mv target/shipping.jar shipping.jar  &>> $log_file
 check_status $? "Moving pacakge to shipping jar " 
 
-dnf install mysql -y
+sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
+cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
+
+
+dnf install mysql -y  &>> $log_file
 check_status $? "Install sql client " 
 
 # check cities already exist or not 
@@ -97,8 +101,8 @@ fi
 mysql -h "mysql.$domain_name" -uroot -pRoboShop@1 < /app/db/app-user.sql
 check_status $? "Creating APP user"
 
-sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
-cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
+# sed -i "s/DOMAIN_NAME/$domain_name/g" "$script_dir/shipping.service"
+# cp "$script_dir/shipping.service" /etc/systemd/system/shipping.service
 
 
 
