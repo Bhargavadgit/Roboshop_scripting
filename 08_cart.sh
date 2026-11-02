@@ -97,7 +97,7 @@ check_status $? "restart..cart."
 systemctl status cart
 check_status $? "status..cart."
 
-curl http://localhost:8080/health
+# curl http://localhost:8080/health
 
 echo "Total time ::$SECONDS"
 echo "===================Script ended at $(timestamp)==================" | tee -a $log_file
