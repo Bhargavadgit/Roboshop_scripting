@@ -91,7 +91,7 @@ check_status $? "Install sql client "
 # check cities already exist or not 
 cities_count=$(mysql -h "mysql.$domain_name"-u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
 #count=$(mysql -h "mysql.$domain_name" -u root -pRoboShop@1 -N -B -e "SELECT COUNT(*) FROM cities.cities;" 2>> $log_file )
-if  [ -z "$cities_count" ] || [ "$cities_count" -eq 0 ]; then
+if  [ -z $cities_count ] || [ $cities_count -eq 0 ]; then
     mysql -h mysql.$domain_name -u root -pRoboShop@1 < /app/db/master-data.sql
      check_status $? "Loading shipping data"
      else 
