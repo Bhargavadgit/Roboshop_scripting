@@ -38,13 +38,13 @@ check_status(){
 
 echo "===================Script Started at $(timestamp)==================" | tee -a $log_file
 
-dnf module disable nodejs -y
+dnf module disable nodejs -y &>> $log_file
 check_status $? "disable Nodejs"
 
-dnf module enable nodejs:24 -y
+dnf module enable nodejs:24 -y &>> $log_file
 check_status $? " enable Nodejs"
 
-dnf install nodejs -y
+dnf install nodejs -y &>> $log_file
 check_status $? "install Nodejs"
 
 # adding user,befor check if any users already added or not use command id roboshop
